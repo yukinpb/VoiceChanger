@@ -36,7 +36,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
-        viewBinding = true
+        dataBinding = true
     }
 }
 
@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.dataStore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -73,7 +74,12 @@ dependencies {
     kapt(libs.androidx.room.compiler)
     androidTestImplementation(libs.androidx.room.testing)
 
+    implementation(libs.glide)
+    kapt(libs.glideCompiler)
+
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
     implementation("com.arthenica:mobile-ffmpeg-full-gpl:4.4.LTS")
+    implementation("com.tbuonomo:dotsindicator:5.0")
 }
