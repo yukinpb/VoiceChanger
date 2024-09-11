@@ -1,6 +1,7 @@
 package com.example.voicechanger.base.activity
 
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.databinding.ViewDataBinding
 import com.example.voicechanger.base.viewmodel.BaseViewModel
 

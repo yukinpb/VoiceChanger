@@ -1,9 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.VoiceChanger" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Base.Theme.VoiceChanger" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:fontFamily">@font/nerkoone_font</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textAppearance">@style/DefaultTextAppearance</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="Theme.VoiceChanger" parent="Base.Theme.VoiceChanger" />
+    <style name="CustomAppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
+        <item name="android:background">@null</item>
+        <item name="elevation">0dp</item>
+    </style>
 </resources>

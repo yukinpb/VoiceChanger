@@ -5,10 +5,17 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import java.io.File
 
-fun ImageView.loadImage(resDrawable: Int) {
-    Glide.with(this)
-        .load(resDrawable)
-        .into(this)
+fun ImageView.loadImage(resDrawable: Int, isCircle: Boolean) {
+    if (isCircle) {
+        Glide.with(this)
+            .load(resDrawable)
+            .circleCrop()
+            .into(this)
+    } else {
+        Glide.with(this)
+            .load(resDrawable)
+            .into(this)
+    }
 }
 
 fun ImageView.loadImage(urlImage: String?, placeHolder: Int, isCircle: Boolean = false) {

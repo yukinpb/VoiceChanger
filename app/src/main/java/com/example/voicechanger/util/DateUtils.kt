@@ -36,3 +36,8 @@ fun String.getCurrentDayName(): String {
         else -> "Sun"
     }
 }
+
+fun Long.toDurationString(): String {
+    val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return dateFormat.format(Date(this))
+}

@@ -9,6 +9,7 @@
         android:layout_height="match_parent">
 
         <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpIntroduce"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/_16dp"
@@ -34,7 +35,7 @@
             android:layout_height="52dp"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_btn_blue_radius_10p"
+            android:background="@drawable/bg_blue_radius_10p"
             android:gravity="center"
             android:text="@string/next"
             android:textColor="@color/white"

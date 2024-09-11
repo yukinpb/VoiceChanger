@@ -20,26 +20,34 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.VoiceChanger"
+        android:theme="@style/Base.Theme.VoiceChanger"
         tools:targetApi="31">
         <activity
-            android:name=".activity.TutorialActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.VoiceChangerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.VoiceRecorderActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.SplashActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.IntroduceActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.VoiceChangerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.VoiceRecorderActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

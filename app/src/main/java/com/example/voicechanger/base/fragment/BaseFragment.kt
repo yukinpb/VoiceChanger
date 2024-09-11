@@ -8,7 +8,7 @@ import com.example.voicechanger.base.viewmodel.BaseViewModel
 abstract class BaseFragment<BD : ViewDataBinding, VM : BaseViewModel>(@LayoutRes id: Int) :
     BaseFragmentNotRequireViewModel<BD>(id) {
 
-    private lateinit var viewModel: VM
+    protected lateinit var viewModel: VM
 
     abstract fun getVM(): VM
 

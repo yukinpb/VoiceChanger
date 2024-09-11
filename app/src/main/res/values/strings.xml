@@ -15,4 +15,20 @@
     <string name="image">image</string>
     <string name="go_to_record">Go to record</string>
     <string name="next">Next</string>
+    <string name="start">Get Started</string>
+    <string name="title_tutorial_1">Voice Changer Free - Sound &amp; Voice Effects</string>
+    <string name="content_tutorial_1">There are many representative voices for you to use and share with your friends.</string>
+    <string name="title_tutorial_2">Convert text to voice</string>
+    <string name="content_tutorial_2">Don\'t want to say? Don\'t worry, just enter text to convert to voice.</string>
+    <string name="title_tutorial_3">Messenger Voice Changer</string>
+    <string name="content_tutorial_3">You can share the funny voice changer with your friends, adding amusement to your interactions.</string>
+    <string name="title_tutorial_4">Powerful Recorder</string>
+    <string name="content_tutorial_4">Our app provides a seamless recording experience with adjustable settings.</string>
+    <string name="recordings">Recordings</string>
+    <string name="upload_files">Upload Files</string>
+    <string name="text_to_audio">Text To Audio</string>
+    <string name="my_record">My Record</string>
+    <string name="see_all">See All</string>
+    <string name="no_records_available">No records available</string>
+    <string name="voice_changer">Voice Changer</string>
 </resources>
