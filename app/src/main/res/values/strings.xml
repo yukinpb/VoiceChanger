@@ -31,5 +31,13 @@
     <string name="see_all">See All</string>
     <string name="no_records_available">No records available</string>
     <string name="voice_changer">Voice Changer</string>
-    <string name="tap_to_record">Tap to record</string>
+    <string name="tap_to_start_recording">Tap to start recording</string>
+    <string name="tap_to_pause">Tap to pause</string>
+    <string name="tap_to_continue">Tap to continue</string>
+    <string name="recording">Recording</string>
+    <string name="img_recorder_desc">Recorder Image</string>
+    <string name="reset">Reset</string>
+    <string name="start_pause_record">Start/Pause Record</string>
+    <string name="tap_to_record_hint_desc">Tap to start recording hint</string>
+    <string name="timer_start">00 : 00</string>
 </resources>

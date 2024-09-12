@@ -1,112 +1,117 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="com.example.voicechanger.viewmodel.VoiceRecorderViewModel" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        android:background="#F5F5F5">
+        android:orientation="vertical">
 
-        <FrameLayout
-            android:id="@+id/circleContainer"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintWidth_percent="0.6"
-            app:layout_constraintHeight_percent="0.6"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/timerText">
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/toolbar"
+            style="@style/CustomAppBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-            <com.example.voicechanger.custom.view.CustomVolumeCircleView
-                android:id="@+id/customVolumeCircleView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <ImageView
-                android:id="@+id/micIcon"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_mic" />
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/timerText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/circleContainer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="@{viewModel.timerText}"
-            android:textSize="24sp"
-            android:textColor="#000" />
-
-        <TextView
-            android:id="@+id/recordingStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/timerText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="@{viewModel.recordingStatus}"
-            android:textSize="18sp"
-            android:textColor="#FF0000" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/recordingStatus"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center">
-
-            <ImageButton
-                android:id="@+id/resetButton"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:onClick="@{() -> viewModel.onResetClicked()}"
-                android:background="@mipmap/ic_reset"
-                android:contentDescription="Reset" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorBackground"
+            android:padding="@dimen/_16dp">
 
             <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:id="@+id/circleContainer"
+                android:layout_width="@dimen/_300dp"
+                android:layout_height="@dimen/_300dp"
+                android:layout_marginTop="@dimen/_80dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <ImageButton
-                    android:id="@+id/startPauseButton"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:onClick="@{() -> viewModel.onStartPauseClicked()}"
-                    android:background="@mipmap/ic_start"
-                    android:contentDescription="Start" />
+                <com.example.voicechanger.custom.view.CustomVolumeCircleView
+                    android:id="@+id/customVolumeCircleView"
+                    android:layout_width="@dimen/_300dp"
+                    android:layout_height="@dimen/_300dp" />
 
-                <TextView
-                    android:id="@+id/tapToRecordHint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|center_horizontal"
-                    android:text="@string/tap_to_record"
-                    android:textColor="#FFFFFF"
-                    android:padding="8dp" />
+                <ImageView
+                    android:id="@+id/imgRecorder"
+                    android:layout_width="@dimen/_100dp"
+                    android:layout_height="@dimen/_100dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/img_recorder"
+                    android:contentDescription="@string/img_recorder_desc"/>
             </FrameLayout>
 
-            <ImageButton
-                android:id="@+id/stopButton"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:onClick="@{() -> viewModel.onStopClicked()}"
-                android:background="@mipmap/ic_stop"
-                android:contentDescription="Stop" />
-        </LinearLayout>
+            <TextView
+                android:id="@+id/timerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16dp"
+                android:text="@string/timer_start"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_48sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/tapToRecordHint"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/circleContainer" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tapToRecordHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginBottom="@dimen/_16dp"
+                android:background="@drawable/bg_blue_radius_10p"
+                android:padding="8dp"
+                android:text="@string/tap_to_start_recording"
+                android:textColor="@color/white"
+                android:contentDescription="@string/tap_to_record_hint_desc"
+                app:layout_constraintBottom_toTopOf="@id/clController"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clController"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_60dp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <ImageButton
+                    android:id="@+id/btnReset"
+                    android:layout_width="@dimen/_60dp"
+                    android:layout_height="@dimen/_60dp"
+                    android:background="@mipmap/ic_reset_record"
+                    android:contentDescription="@string/reset"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btnStartPauseRecord"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/btnStartPauseRecord"
+                    android:layout_width="@dimen/_80dp"
+                    android:layout_height="@dimen/_80dp"
+                    android:layout_gravity="center"
+                    android:background="@mipmap/ic_start_record"
+                    android:contentDescription="@string/start_pause_record"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btnStop"
+                    app:layout_constraintStart_toEndOf="@id/btnReset" />
+
+                <ImageButton
+                    android:id="@+id/btnStop"
+                    android:layout_width="@dimen/_60dp"
+                    android:layout_height="@dimen/_60dp"
+                    android:background="@mipmap/ic_stop_record"
+                    android:contentDescription="@string/stop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btnStartPauseRecord" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </layout>

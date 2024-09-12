@@ -1,140 +1,151 @@
 package com.example.voicechanger.activity
 
-import android.content.Intent
-import android.media.MediaRecorder
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View
-import android.widget.ImageButton
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.voicechanger.R
+import com.example.voicechanger.base.activity.BaseActivity
+import com.example.voicechanger.custom.toolbar.CustomToolbar
 import com.example.voicechanger.databinding.ActivityVoiceRecorderBinding
 import com.example.voicechanger.viewmodel.VoiceRecorderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class VoiceRecorderActivity : AppCompatActivity() {
+class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRecorderViewModel>() {
 
-    private lateinit var startPauseButton: ImageButton
-    private lateinit var stopButton: ImageButton
-    private lateinit var resetButton: ImageButton
-    private lateinit var timerText: TextView
-    private lateinit var recordingStatus: TextView
-    private lateinit var tapToRecordHint: TextView
+    override val layoutId: Int
+        get() = R.layout.activity_voice_recorder
 
     private var isRecording = false
     private var isPaused = false
-    private var recorder: MediaRecorder? = null
-    private var timeInSeconds = 0
-    private val handler = Handler(Looper.getMainLooper())
-    private val timerRunnable = object : Runnable {
-        override fun run() {
-            timeInSeconds++
-            val minutes = timeInSeconds / 60
-            val seconds = timeInSeconds % 60
-            timerText.text = String.format("%02d:%02d", minutes, seconds)
-            handler.postDelayed(this, 1000)
+
+    private val viewModel: VoiceRecorderViewModel by viewModels()
+
+    private val permissions = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+        arrayOf(Manifest.permission.RECORD_AUDIO)
+    } else {
+        arrayOf(
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+    }
+
+    private lateinit var rotateAnimation: Animation
+
+    override fun getVM(): VoiceRecorderViewModel {
+        return viewModel
+    }
+
+    private fun checkPermissions(): Boolean {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == -1 ||
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == -1 ||
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == -1
+        ) {
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION)
+        }
+        return permissions.all {
+            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun initView(savedInstanceState: Bundle?) {
+        super.initView(savedInstanceState)
 
-        // Find views
-        startPauseButton = findViewById(R.id.startPauseButton)
-        stopButton = findViewById(R.id.stopButton)
-        resetButton = findViewById(R.id.resetButton)
-        timerText = findViewById(R.id.timerText)
-        recordingStatus = findViewById(R.id.recordingStatus)
-        tapToRecordHint = findViewById(R.id.tapToRecordHint)
+        if(!checkPermissions()) {
+            finish()
+        }
 
-        // Set button listeners
-        startPauseButton.setOnClickListener {
-            if (!isRecording) {
-                startRecording()
-            } else if (isPaused) {
-                resumeRecording()
-            } else {
-                pauseRecording()
+        customToolbar = CustomToolbar(this).apply {
+            setToolbarTitle(context.getString(R.string.recording))
+            setBackButtonVisibility(true)
+            setBackButtonClickListener {
+                getVM().stopRecording()
+                finish() }
+        }
+
+        binding.toolbar.addView(customToolbar)
+
+        Glide.with(this)
+            .load(R.mipmap.img_recorder)
+            .circleCrop()
+            .into(binding.imgRecorder)
+
+        rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_infinite)
+
+        binding.btnStop.isEnabled = false
+    }
+
+    override fun setOnClick() {
+        super.setOnClick()
+
+        binding.btnStartPauseRecord.setOnClickListener {
+            when {
+                isRecording && !isPaused -> {
+                    getVM().pauseRecording()
+                    binding.btnStartPauseRecord.setBackgroundResource(R.mipmap.ic_continue_record)
+                    binding.tapToRecordHint.text = getString(R.string.tap_to_continue)
+                    isPaused = true
+                    binding.imgRecorder.clearAnimation()
+                }
+                isPaused -> {
+                    getVM().continueRecording()
+                    binding.btnStartPauseRecord.setBackgroundResource(R.mipmap.ic_pause)
+                    binding.tapToRecordHint.text = getString(R.string.tap_to_pause)
+                    isPaused = false
+                    binding.imgRecorder.startAnimation(rotateAnimation)
+                }
+                else -> {
+                    getVM().startRecording()
+                    binding.btnStartPauseRecord.setBackgroundResource(R.mipmap.ic_pause)
+                    binding.tapToRecordHint.text = getString(R.string.tap_to_pause)
+                    isRecording = true
+                    binding.imgRecorder.startAnimation(rotateAnimation)
+                    binding.btnStop.isEnabled = true
+                }
             }
         }
 
-        stopButton.setOnClickListener {
-            stopRecording()
+        binding.btnReset.setOnClickListener {
+            getVM().resetRecording()
+            resetUI()
         }
 
-        resetButton.setOnClickListener {
-            resetRecording()
+        binding.btnStop.setOnClickListener {
+            getVM().stopRecording()
+            resetUI()
         }
     }
 
-    private fun startRecording() {
-        // Start MediaRecorder and update UI
-        recorder = MediaRecorder().apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
-            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-            setOutputFile("path_to_your_file.3gp")
-            prepare()
-            start()
+    override fun bindingStateView() {
+        super.bindingStateView()
+
+        getVM().timerText.observe(this) { time ->
+            binding.timerText.text = time
         }
-        isRecording = true
-        isPaused = false
-        startPauseButton.setBackgroundResource(R.mipmap.ic_pause)
-        tapToRecordHint.visibility = View.GONE
-        recordingStatus.visibility = View.VISIBLE
-        recordingStatus.text = "Recording..."
-        handler.post(timerRunnable)
-    }
 
-    private fun pauseRecording() {
-        isPaused = true
-        startPauseButton.setBackgroundResource(R.mipmap.ic_start)
-        recordingStatus.text = "Paused"
-        handler.removeCallbacks(timerRunnable)
-    }
-
-    private fun resumeRecording() {
-        isPaused = false
-        startPauseButton.setBackgroundResource(R.mipmap.ic_pause)
-        recordingStatus.text = "Recording..."
-        handler.post(timerRunnable)
-    }
-
-    private fun stopRecording() {
-        recorder?.apply {
-            stop()
-            release()
+        getVM().volumeLevel.observe(this) { volume ->
+            binding.customVolumeCircleView.updateVolumeLevel(volume)
         }
-        recorder = null
+    }
+
+    private fun resetUI() {
+        binding.btnStartPauseRecord.setBackgroundResource(R.mipmap.ic_start_record)
+        binding.tapToRecordHint.text = getString(R.string.tap_to_start_recording)
+        binding.timerText.text = getString(R.string.timer_start)
         isRecording = false
         isPaused = false
-        handler.removeCallbacks(timerRunnable)
-        timeInSeconds = 0
-        // Chuyển sang màn hình khác hoặc xử lý lưu trữ
+        binding.btnStop.isEnabled = false
+        binding.imgRecorder.clearAnimation()
     }
 
-    private fun resetRecording() {
-        // Reset lại mọi thứ
-        recorder?.apply {
-            stop()
-            release()
-        }
-        recorder = null
-        isRecording = false
-        isPaused = false
-        handler.removeCallbacks(timerRunnable)
-        timeInSeconds = 0
-        timerText.text = "00:00"
-        startPauseButton.setBackgroundResource(R.mipmap.ic_start)
-        tapToRecordHint.visibility = View.VISIBLE
-        recordingStatus.visibility = View.GONE
+    companion object {
+        private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
     }
 }

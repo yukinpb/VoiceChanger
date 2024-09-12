@@ -6,4 +6,6 @@ object Constants {
 
     const val VOICE_CHANGER_DIR: String = "VoiceChanger"
     const val VOICE_RECORDER_DIR: String = "VoiceRecorder"
+
+    const val NUMBER_OF_LAYER_VOICE_CIRCLE = 20
 }

@@ -11,9 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.example.voicechanger.custom.dialog.LoadingDialog
+import com.example.voicechanger.custom.toolbar.CustomToolbar
 
 abstract class BaseActivityNotRequireViewModel<BD : ViewDataBinding> : AppCompatActivity() {
 
+    protected var customToolbar: CustomToolbar? = null
     private var _binding: BD? = null
     protected val binding: BD get() = _binding!!
 

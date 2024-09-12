@@ -8,7 +8,6 @@ import com.example.voicechanger.base.viewmodel.BaseViewModel
 import com.example.voicechanger.model.AudioFile
 import com.example.voicechanger.util.Constants
 import com.example.voicechanger.util.toDurationString
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
 
 class MainViewModel : BaseViewModel() {
@@ -22,7 +21,8 @@ class MainViewModel : BaseViewModel() {
 
     private fun loadAudioFiles() {
         val audioFilesList = mutableListOf<AudioFile>()
-        val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val downloadDir =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val voiceChangerDir = File(downloadDir, Constants.VOICE_CHANGER_DIR)
 
         if (voiceChangerDir.exists() && voiceChangerDir.isDirectory) {
@@ -40,7 +40,8 @@ class MainViewModel : BaseViewModel() {
     private fun getDuration(file: File): String {
         val retriever = MediaMetadataRetriever()
         retriever.setDataSource(file.absolutePath)
-        val durationInMillis = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+        val durationInMillis =
+            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
         retriever.release()
         return durationInMillis.toDurationString()
     }

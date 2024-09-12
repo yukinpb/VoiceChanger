@@ -34,7 +34,8 @@ class IntroduceActivity : BaseActivityNotRequireViewModel<ActivityIntroduceBindi
     override fun setOnClick() {
         super.setOnClick()
 
-        binding.vpIntroduce.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.vpIntroduce.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 if (position == fragments.size - 1) {

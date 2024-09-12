@@ -5,7 +5,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import java.io.File
 
-fun ImageView.loadImage(resDrawable: Int, isCircle: Boolean) {
+fun ImageView.loadImage(resDrawable: Int, isCircle: Boolean = false) {
     if (isCircle) {
         Glide.with(this)
             .load(resDrawable)

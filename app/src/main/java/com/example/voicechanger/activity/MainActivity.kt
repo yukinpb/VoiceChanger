@@ -1,27 +1,25 @@
 package com.example.voicechanger.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.voicechanger.R
-import androidx.activity.viewModels
-import com.example.voicechanger.databinding.ActivityMainBinding
 import com.example.voicechanger.adapter.AudioFileAdapter
 import com.example.voicechanger.base.activity.BaseActivity
 import com.example.voicechanger.custom.toolbar.CustomToolbar
+import com.example.voicechanger.databinding.ActivityMainBinding
 import com.example.voicechanger.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
-    private lateinit var customToolbar: CustomToolbar
     private lateinit var adapter: AudioFileAdapter
+    private val viewModel: MainViewModel by viewModels()
 
     override val layoutId: Int
         get() = R.layout.activity_main
 
-    override fun getVM(): MainViewModel {
-        val viewModel: MainViewModel by viewModels()
-        return viewModel
-    }
+    override fun getVM(): MainViewModel = viewModel
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
@@ -36,6 +34,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         adapter = AudioFileAdapter()
         binding.rvMyRecord.layoutManager = LinearLayoutManager(this)
         binding.rvMyRecord.adapter = adapter
+    }
+
+    override fun setOnClick() {
+        super.setOnClick()
+
+        binding.btnRecord.setOnClickListener {
+            startActivity(Intent(this, VoiceRecorderActivity::class.java))
+        }
     }
 
     override fun bindingStateView() {
