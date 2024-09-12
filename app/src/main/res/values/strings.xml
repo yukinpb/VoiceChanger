@@ -31,4 +31,5 @@
     <string name="see_all">See All</string>
     <string name="no_records_available">No records available</string>
     <string name="voice_changer">Voice Changer</string>
+    <string name="tap_to_record">Tap to record</string>
 </resources>

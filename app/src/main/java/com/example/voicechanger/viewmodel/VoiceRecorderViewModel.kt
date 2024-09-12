@@ -4,6 +4,8 @@ import android.Manifest
 import android.content.Context
 import android.media.MediaRecorder
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -21,79 +23,99 @@ class VoiceRecorderViewModel @Inject constructor(
     private val mediaRecorder: MediaRecorder,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
-    private var fileName: String = "${context.filesDir}/audioRecord.mp3"
-    private lateinit var countDownTimer: CountDownTimer
-    private var permissions: Array<String> =
-        arrayOf(
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
+    private var timeInSeconds = 0
+    private val handler = Handler(Looper.getMainLooper())
 
-    private val _isRecording = MutableLiveData<Boolean>()
-    val isRecording: LiveData<Boolean> get() = _isRecording
+    private val _timerText = MutableLiveData("00:00")
+    val timerText: LiveData<String> = _timerText
 
-    private val _timerText = MutableLiveData<String>()
-    val timerText: LiveData<String> get() = _timerText
+    private val _recordingStatus = MutableLiveData("")
+    val recordingStatus: LiveData<String> = _recordingStatus
 
-    init {
-        _isRecording.value = false
-        _timerText.value = "30"
-    }
+    private val _showBubbleHint = MutableLiveData(true)
+    val showBubbleHint: LiveData<Boolean> = _showBubbleHint
 
-    fun requestAudioPermissions(activity: VoiceRecorderActivity) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.RECORD_AUDIO) == -1 ||
-            ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) == -1 ||
-            ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == -1
-        ) {
-            ActivityCompat.requestPermissions(activity, permissions, REQUEST_RECORD_AUDIO_PERMISSION)
+    private var isRecording = false
+    private var isPaused = false
+
+    private val timerRunnable = object : Runnable {
+        override fun run() {
+            timeInSeconds++
+            val minutes = timeInSeconds / 60
+            val seconds = timeInSeconds % 60
+            _timerText.value = String.format("%02d:%02d", minutes, seconds)
+            handler.postDelayed(this, 1000)
         }
     }
 
-    fun startRecording() {
-        _isRecording.value = true
-        _timerText.value = "30"
-        countDownTimer = object : CountDownTimer(31000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                _timerText.value = (millisUntilFinished / 1000).toString()
-            }
-
-            override fun onFinish() {}
-        }
-        countDownTimer.start()
-
-        try {
-            mediaRecorder.apply {
-                setAudioSource(MediaRecorder.AudioSource.MIC)
-                setOutputFormat(MediaRecorder.OutputFormat.DEFAULT)
-                setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT)
-                setOutputFile(fileName)
-                prepare()
-                start()
-            }
-        } catch (e: IOException) {
-            Log.e(TAG, "prepare() failed")
-        } catch (e: IllegalStateException) {
-            Log.e(TAG, "start() failed")
+    fun onStartPauseClicked() {
+        if (!isRecording) {
+            startRecording()
+        } else if (isPaused) {
+            resumeRecording()
+        } else {
+            pauseRecording()
         }
     }
 
-    fun stopRecording() {
-        _isRecording.value = false
-        countDownTimer.cancel()
-
-        try {
-            mediaRecorder.apply {
-                stop()
-                release()
-            }
-        } catch (e: IllegalStateException) {
-            Log.e(TAG, "stop() failed: ${e.message}")
+    private fun startRecording() {
+        mediaRecorder.apply {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+            setOutputFile("path_to_your_file.3gp")
+            prepare()
+            start()
         }
+        isRecording = true
+        isPaused = false
+        _showBubbleHint.value = false
+        _recordingStatus.value = "Recording..."
+        handler.post(timerRunnable)
     }
 
-    companion object {
-        const val REQUEST_RECORD_AUDIO_PERMISSION = 200
-        const val TAG = "VoiceRecorderViewModel"
+    private fun pauseRecording() {
+        isPaused = true
+        _recordingStatus.value = "Paused"
+        handler.removeCallbacks(timerRunnable)
+        // Note: `MediaRecorder` does not have a built-in pause method.
+    }
+
+    private fun resumeRecording() {
+        isPaused = false
+        _recordingStatus.value = "Recording..."
+        handler.post(timerRunnable)
+        // Resume recording logic (e.g., by handling file appending manually if needed)
+    }
+
+    fun onStopClicked() {
+        mediaRecorder.apply {
+            stop()
+            reset()
+        }
+        isRecording = false
+        isPaused = false
+        handler.removeCallbacks(timerRunnable)
+        _recordingStatus.value = "Stopped"
+    }
+
+    fun onResetClicked() {
+        mediaRecorder.apply {
+            stop()
+            reset()
+        }
+        isRecording = false
+        isPaused = false
+        handler.removeCallbacks(timerRunnable)
+        timeInSeconds = 0
+        _timerText.value = "00:00"
+        _showBubbleHint.value = true
+        _recordingStatus.value = ""
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        mediaRecorder.release()
+        handler.removeCallbacks(timerRunnable)
     }
 }
