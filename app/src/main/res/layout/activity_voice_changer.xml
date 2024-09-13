@@ -1,5 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +18,7 @@
             android:padding="16dp">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/tabLayout"
+                android:id="@+id/tabCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_40dp"
@@ -29,6 +30,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:tabBackground="@drawable/tab_select_changer_audio"
@@ -39,12 +41,12 @@
                     <com.google.android.material.tabs.TabItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sound effect" />
+                        android:text="@string/sound_effect" />
 
                     <com.google.android.material.tabs.TabItem
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ambient sound" />
+                        android:text="@string/ambient_sound" />
                 </com.google.android.material.tabs.TabLayout>
             </androidx.cardview.widget.CardView>
 
@@ -57,7 +59,7 @@
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tabLayout">
+                app:layout_constraintTop_toBottomOf="@id/tabCardView">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -66,8 +68,8 @@
 
                     <ImageView
                         android:id="@+id/btnVolume"
-                        android:layout_width="@dimen/_24dp"
-                        android:layout_height="@dimen/_24dp"
+                        android:layout_width="@dimen/_28dp"
+                        android:layout_height="@dimen/_28dp"
                         android:src="@mipmap/ic_turn_on_volume"
                         app:layout_constraintBottom_toBottomOf="@+id/audioText"
                         app:layout_constraintStart_toStartOf="parent"
@@ -78,9 +80,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Audio.mp3"
+                        tools:text="Audio.mp3"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
                         app:layout_constraintEnd_toStartOf="@id/btnReset"
                         app:layout_constraintStart_toEndOf="@id/btnVolume"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -94,14 +98,15 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <ProgressBar
-                        android:id="@+id/progressBar"
+                    <SeekBar
+                        android:id="@+id/progressAudio"
                         style="@android:style/Widget.Material.Light.ProgressBar.Horizontal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_16dp"
                         android:progress="50"
                         android:progressTint="@color/colorPrimary"
+                        android:thumbTint="@color/colorPrimary"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/audioText" />
@@ -110,38 +115,38 @@
                         android:id="@+id/currentTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="00:00"
+                        tools:text="00:00"
                         android:textColor="@android:color/black"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/progressBar" />
+                        app:layout_constraintTop_toBottomOf="@id/progressAudio" />
 
                     <TextView
                         android:id="@+id/maxTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="04:00"
+                        tools:text="04:00"
                         android:textColor="@android:color/black"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/progressBar" />
+                        app:layout_constraintTop_toBottomOf="@id/progressAudio" />
 
                     <ImageView
                         android:id="@+id/btnPauseStart"
                         android:layout_width="@dimen/_30dp"
                         android:layout_height="@dimen/_30dp"
                         android:layout_marginTop="@dimen/_8dp"
-                        android:src="@mipmap/ic_continue_audio"
+                        android:src="@mipmap/ic_pause_audio"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/currentTime" />
 
                     <Button
                         android:id="@+id/btnSpeed"
-                        android:layout_width="@dimen/_30dp"
-                        android:layout_height="@dimen/_30dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
                         android:layout_marginTop="@dimen/_8dp"
                         android:background="@mipmap/img_outline_speed"
-                        android:text="1.0x"
-                        android:textSize="10sp"
+                        tools:text="1.0x"
+                        android:textSize="@dimen/_10sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/maxTime" />

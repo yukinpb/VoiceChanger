@@ -14,12 +14,14 @@ import com.example.voicechanger.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     private lateinit var adapter: AudioFileAdapter
-    private val viewModel: MainViewModel by viewModels()
 
     override val layoutId: Int
         get() = R.layout.activity_main
 
-    override fun getVM(): MainViewModel = viewModel
+    override fun getVM(): MainViewModel {
+        val viewModel: MainViewModel by viewModels()
+        return viewModel
+    }
 
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)

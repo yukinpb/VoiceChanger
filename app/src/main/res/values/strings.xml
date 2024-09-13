@@ -40,4 +40,19 @@
     <string name="start_pause_record">Start/Pause Record</string>
     <string name="tap_to_record_hint_desc">Tap to start recording hint</string>
     <string name="timer_start">00 : 00</string>
+    <string name="sound_effect">Sound effect</string>
+    <string name="ambient_sound">Ambient sound</string>
+    <string name="sound">Sound</string>
+    <string name="pitch">Pitch</string>
+    <string name="audio_info">%1$s | %2$s</string>
+    <string name="none">None</string>
+    <string name="robot">Robot</string>
+    <string name="chipmunk">Chipmunk</string>
+    <string name="cave">Cave</string>
+    <string name="time_start_audio">00:00</string>
+    <string name="x">%1$fX</string>
+    <string name="enter_file_name">Enter file name</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="save_file">Save File</string>
 </resources>

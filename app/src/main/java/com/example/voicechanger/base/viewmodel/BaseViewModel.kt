@@ -7,4 +7,12 @@ import androidx.lifecycle.ViewModel
 abstract class BaseViewModel : ViewModel() {
     private var _isLoading = MutableLiveData<Boolean>()
     var isLoading : LiveData<Boolean> = _isLoading
+
+    fun showLoading() {
+        _isLoading.value = true
+    }
+
+    fun hideLoading() {
+        _isLoading.value = false
+    }
 }

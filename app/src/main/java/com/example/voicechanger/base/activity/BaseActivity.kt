@@ -17,4 +17,16 @@ abstract class BaseActivity<BD : ViewDataBinding, VM : BaseViewModel> :
         viewModel = getVM()
     }
 
+    override fun bindingStateView() {
+        super.bindingStateView()
+
+        viewModel.isLoading.observe(this) {
+            if (it) {
+                showLoading()
+            } else {
+                hiddenLoading()
+            }
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.voicechanger.activity
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.animation.Animation
@@ -19,13 +20,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRecorderViewModel>() {
 
-    override val layoutId: Int
-        get() = R.layout.activity_voice_recorder
-
+    private lateinit var rotateAnimation: Animation
     private var isRecording = false
     private var isPaused = false
 
-    private val viewModel: VoiceRecorderViewModel by viewModels()
+    override val layoutId: Int
+        get() = R.layout.activity_voice_recorder
 
     private val permissions = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
         arrayOf(Manifest.permission.RECORD_AUDIO)
@@ -37,9 +37,8 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
         )
     }
 
-    private lateinit var rotateAnimation: Animation
-
     override fun getVM(): VoiceRecorderViewModel {
+        val viewModel: VoiceRecorderViewModel by viewModels()
         return viewModel
     }
 
@@ -119,6 +118,9 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
 
         binding.btnStop.setOnClickListener {
             getVM().stopRecording()
+            startActivity(Intent(this, VoiceChangerActivity::class.java).apply {
+                putExtra(RECORDING_FILE_PATH, getVM().getRecordingFilePath())
+            })
             resetUI()
         }
     }
@@ -147,5 +149,6 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
 
     companion object {
         private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
+        const val RECORDING_FILE_PATH = "RECORDING_FILE_PATH "
     }
 }

@@ -36,11 +36,21 @@ class CustomToolbar @JvmOverloads constructor(
         }
     }
 
+    fun setOkButtonClickListener(listener: () -> Unit) {
+        binding.btnOk.setOnClickListener {
+            listener.invoke()
+        }
+    }
+
     fun setBackButtonVisibility(isVisible: Boolean) {
         binding.btnBack.isVisible = isVisible
     }
 
     fun setSettingButtonVisibility(isVisible: Boolean) {
         binding.btnSettings.isVisible = isVisible
+    }
+
+    fun setOkButtonVisibility(isVisible: Boolean) {
+        binding.btnOk.isVisible = isVisible
     }
 }

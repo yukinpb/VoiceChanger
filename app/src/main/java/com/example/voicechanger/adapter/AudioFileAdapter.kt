@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.voicechanger.R
 import com.example.voicechanger.databinding.ItemAudioFileBinding
 import com.example.voicechanger.model.AudioFile
 
@@ -22,17 +23,17 @@ class AudioFileAdapter : ListAdapter<AudioFile, AudioFileAdapter.AudioFileViewHo
     class AudioFileViewHolder(private val binding: ItemAudioFileBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(audioFile: AudioFile) {
             binding.nameAudio.text = audioFile.name
-            binding.infoAudio.text = "${audioFile.time} | ${audioFile.size}"
+            binding.infoAudio.text = binding.root.context.getString(R.string.audio_info, audioFile.time, audioFile.size)
         }
     }
-}
 
-class AudioFileDiffCallback : DiffUtil.ItemCallback<AudioFile>() {
-    override fun areItemsTheSame(oldItem: AudioFile, newItem: AudioFile): Boolean {
-        return oldItem.name == newItem.name
-    }
+    class AudioFileDiffCallback : DiffUtil.ItemCallback<AudioFile>() {
+        override fun areItemsTheSame(oldItem: AudioFile, newItem: AudioFile): Boolean {
+            return oldItem.name == newItem.name
+        }
 
-    override fun areContentsTheSame(oldItem: AudioFile, newItem: AudioFile): Boolean {
-        return oldItem == newItem
+        override fun areContentsTheSame(oldItem: AudioFile, newItem: AudioFile): Boolean {
+            return oldItem == newItem
+        }
     }
 }
