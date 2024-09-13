@@ -4,20 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewVoiceChanger"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="@dimen/_16dp"
         app:cardUseCompatPadding="true"
         android:elevation="@dimen/_8dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/bg_item_voice_changer" >
+        android:layout_margin="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/llVoiceChanger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:background="@drawable/bg_item_voice_changer">
 
             <TextView
                 android:id="@+id/title"

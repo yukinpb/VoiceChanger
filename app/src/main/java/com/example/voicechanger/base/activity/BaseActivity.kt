@@ -20,7 +20,7 @@ abstract class BaseActivity<BD : ViewDataBinding, VM : BaseViewModel> :
     override fun bindingStateView() {
         super.bindingStateView()
 
-        viewModel.isLoading.observe(this) {
+        getVM().isLoading.observe(this) {
             if (it) {
                 showLoading()
             } else {

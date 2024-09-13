@@ -41,7 +41,7 @@ class MainViewModel : BaseViewModel() {
         val retriever = MediaMetadataRetriever()
         retriever.setDataSource(file.absolutePath)
         val durationInMillis =
-            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toInt() ?: 0
         retriever.release()
         return durationInMillis.toDurationString()
     }

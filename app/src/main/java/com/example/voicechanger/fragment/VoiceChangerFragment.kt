@@ -3,7 +3,9 @@ package com.example.voicechanger.fragment
 import android.os.Build
 import android.os.Bundle
 import android.widget.SeekBar
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.voicechanger.R
 import com.example.voicechanger.adapter.VoiceChangerAdapter
@@ -21,7 +23,7 @@ class VoiceChangerFragment :
     private var dataList: List<VoiceChangerItem>? = null
 
     override fun getVM(): VoiceChangerViewModel {
-        val viewModel: VoiceChangerViewModel by viewModels({ requireParentFragment() })
+        val viewModel: VoiceChangerViewModel by viewModels({ requireActivity() })
         return viewModel
     }
 
@@ -51,24 +53,25 @@ class VoiceChangerFragment :
             }
         }
 
-        dataList?.let {
-            adapter.submitList(it)
-        }
-        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.layoutManager = GridLayoutManager(context, 2, LinearLayoutManager.VERTICAL, false)
         adapter = VoiceChangerAdapter {
             getVM().applyEffect(it.id)
         }
         binding.recyclerView.adapter = adapter
 
+        dataList?.let {
+            adapter.submitList(it)
+        }
+
         binding.slider.max = 100
-        binding.slider.progress = getVM().getCurrentPitch()
+        binding.slider.progress = 100
 
         binding.slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 when (category) {
-                    Constants.SOUND_EFFECT -> getVM().setPitch(progress)
+                    Constants.SOUND_EFFECT -> {}
                     Constants.AMBIENT_SOUND -> {}
-                    else -> getVM().setPitch(progress - 50)
+                    else -> {}
                 }
             }
 
@@ -77,18 +80,12 @@ class VoiceChangerFragment :
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         })
 
+        binding.cardView.isVisible = category == Constants.AMBIENT_SOUND
+
         binding.title.text = when (category) {
             Constants.SOUND_EFFECT -> getString(R.string.pitch)
             Constants.AMBIENT_SOUND -> getString(R.string.sound)
             else -> getString(R.string.pitch)
-        }
-    }
-
-    override fun bindingStateView() {
-        super.bindingStateView()
-
-        getVM().pitch.observe(viewLifecycleOwner) {
-            binding.slider.progress = it + 50
         }
     }
 }

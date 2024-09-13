@@ -50,7 +50,7 @@
     <string name="chipmunk">Chipmunk</string>
     <string name="cave">Cave</string>
     <string name="time_start_audio">00:00</string>
-    <string name="x">%1$fX</string>
+    <string name="x">%.1fX</string>
     <string name="enter_file_name">Enter file name</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>

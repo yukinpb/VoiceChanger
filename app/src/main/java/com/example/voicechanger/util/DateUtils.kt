@@ -37,7 +37,8 @@ fun String.getCurrentDayName(): String {
     }
 }
 
-fun Long.toDurationString(): String {
-    val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-    return dateFormat.format(Date(this))
+fun Int.toDurationString(): String {
+    val minutes = this / 60
+    val seconds = this % 60
+    return String.format("%02d:%02d", minutes, seconds)
 }

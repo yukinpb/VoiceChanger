@@ -95,14 +95,14 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
                 }
                 isPaused -> {
                     getVM().continueRecording()
-                    binding.btnStartPauseRecord.setBackgroundResource(R.mipmap.ic_pause)
+                    binding.btnStartPauseRecord.setBackgroundResource(R.mipmap.ic_pause_record)
                     binding.tapToRecordHint.text = getString(R.string.tap_to_pause)
                     isPaused = false
                     binding.imgRecorder.startAnimation(rotateAnimation)
                 }
                 else -> {
                     getVM().startRecording()
-                    binding.btnStartPauseRecord.setBackgroundResource(R.mipmap.ic_pause)
+                    binding.btnStartPauseRecord.setBackgroundResource(R.mipmap.ic_pause_record)
                     binding.tapToRecordHint.text = getString(R.string.tap_to_pause)
                     isRecording = true
                     binding.imgRecorder.startAnimation(rotateAnimation)

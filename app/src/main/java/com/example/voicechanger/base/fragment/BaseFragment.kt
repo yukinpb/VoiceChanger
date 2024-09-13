@@ -8,12 +8,13 @@ import com.example.voicechanger.base.viewmodel.BaseViewModel
 abstract class BaseFragment<BD : ViewDataBinding, VM : BaseViewModel>(@LayoutRes id: Int) :
     BaseFragmentNotRequireViewModel<BD>(id) {
 
-    protected lateinit var viewModel: VM
+    private lateinit var viewModel: VM
 
     abstract fun getVM(): VM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         viewModel = getVM()
     }
 

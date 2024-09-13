@@ -1,6 +1,7 @@
 package com.example.voicechanger.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.SeekBar
 import androidx.activity.viewModels
 import com.example.voicechanger.R
@@ -12,9 +13,12 @@ import com.example.voicechanger.dialog.EnterFileNameDialog
 import com.example.voicechanger.fragment.VoiceChangerFragment
 import com.example.voicechanger.util.Constants
 import com.example.voicechanger.util.SoundEffectProvider
+import com.example.voicechanger.util.toDurationString
 import com.example.voicechanger.viewmodel.VoiceChangerViewModel
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChangerViewModel>() {
 
     private var isPlaying = true
@@ -32,7 +36,9 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
         val fileName = intent.getStringExtra(VoiceRecorderActivity.RECORDING_FILE_PATH)
         fileName?.let {
             getVM().setTempFileName(it)
+            getVM().start()
         }
+
 
         customToolbar = CustomToolbar(this).apply {
             setToolbarTitle(getString(R.string.voice_changer))
@@ -99,7 +105,7 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
 
         getVM().progress.observe(this) { progress ->
             binding.progressAudio.progress = progress
-            updateCurrentTimeTextView()
+            updateCurrentTimeTextView(progress)
         }
 
         getVM().isVolumeOn.observe(this) { isVolumeOn ->
@@ -135,20 +141,21 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
 
     private fun updateMaxDurationTextView() {
         val maxDuration = getVM().getMaxDuration()
-        binding.maxTime.text = maxDuration
+        binding.maxTime.text = maxDuration.toDurationString()
+        binding.progressAudio.max = maxDuration
     }
 
-    private fun updateCurrentTimeTextView() {
-        val currentTime = getVM().getCurrentPlaybackTime()
-        binding.currentTime.text = currentTime
+    private fun updateCurrentTimeTextView(progress: Int) {
+        binding.currentTime.text = progress.toDurationString()
     }
 
     private fun setupProgressBar() {
+        binding.progressAudio.progress = 0
+
         binding.progressAudio.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    getVM().seekTo(progress)
-                    updateCurrentTimeTextView()
+                    getVM().seekTo(progress * 1000)
                 }
             }
 
