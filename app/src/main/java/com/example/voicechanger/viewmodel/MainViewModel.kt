@@ -1,13 +1,13 @@
 package com.example.voicechanger.viewmodel
 
-import android.media.MediaMetadataRetriever
 import android.os.Environment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.voicechanger.base.viewmodel.BaseViewModel
 import com.example.voicechanger.model.AudioFile
 import com.example.voicechanger.util.Constants
-import com.example.voicechanger.util.toDurationString
+import com.example.voicechanger.util.getDuration
+import com.example.voicechanger.util.getSize
 import java.io.File
 
 class MainViewModel : BaseViewModel() {
@@ -19,30 +19,23 @@ class MainViewModel : BaseViewModel() {
         loadAudioFiles()
     }
 
-    private fun loadAudioFiles() {
+    fun loadAudioFiles() {
         val audioFilesList = mutableListOf<AudioFile>()
         val downloadDir =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val voiceChangerDir = File(downloadDir, Constants.VOICE_CHANGER_DIR)
+        val voiceChangerDir = File(downloadDir, Constants.Directories.VOICE_CHANGER_DIR)
 
         if (voiceChangerDir.exists() && voiceChangerDir.isDirectory) {
-            val files = voiceChangerDir.listFiles { _, name -> name.endsWith(".mp3") }?.take(5)
+            val files = voiceChangerDir.listFiles { _, name -> name.endsWith(".mp3") }
+                ?.sortedByDescending { it.lastModified() }
+                ?.take(5)
             files?.forEach { file ->
-                val size = file.length() / (1024 * 1024)
-                val duration = getDuration(file)
-                audioFilesList.add(AudioFile(file.name, duration, "$size MB"))
+                val size = file.getSize()
+                val duration = file.getDuration()
+                audioFilesList.add(AudioFile(file.name, duration, size))
             }
         }
 
         _audioFiles.postValue(audioFilesList)
-    }
-
-    private fun getDuration(file: File): String {
-        val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(file.absolutePath)
-        val durationInMillis =
-            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toInt() ?: 0
-        retriever.release()
-        return durationInMillis.toDurationString()
     }
 }

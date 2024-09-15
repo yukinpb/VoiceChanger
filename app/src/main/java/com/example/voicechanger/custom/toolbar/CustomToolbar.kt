@@ -24,33 +24,48 @@ class CustomToolbar @JvmOverloads constructor(
         binding.tvTitle.text = title
     }
 
-    fun setBackButtonClickListener(listener: () -> Unit) {
-        binding.btnBack.setOnClickListener {
-            listener.invoke()
-        }
-    }
-
-    fun setSettingButtonClickListener(listener: () -> Unit) {
-        binding.btnSettings.setOnClickListener {
-            listener.invoke()
-        }
-    }
-
-    fun setOkButtonClickListener(listener: () -> Unit) {
-        binding.btnOk.setOnClickListener {
-            listener.invoke()
-        }
-    }
-
-    fun setBackButtonVisibility(isVisible: Boolean) {
+    fun setUpBackButton(isVisible: Boolean = true, listener: () -> Unit = {}) {
         binding.btnBack.isVisible = isVisible
+        if (isVisible) {
+            binding.btnBack.setOnClickListener {
+                listener.invoke()
+            }
+        }
     }
 
-    fun setSettingButtonVisibility(isVisible: Boolean) {
+    fun setUpSettingButton(isVisible: Boolean = true, listener: () -> Unit = {}) {
         binding.btnSettings.isVisible = isVisible
+        if (isVisible) {
+            binding.btnSettings.setOnClickListener {
+                listener.invoke()
+            }
+        }
     }
 
-    fun setOkButtonVisibility(isVisible: Boolean) {
+    fun setUpOkButton(isVisible: Boolean = true, listener: () -> Unit = {}) {
         binding.btnOk.isVisible = isVisible
+        if (isVisible) {
+            binding.btnOk.setOnClickListener {
+                listener.invoke()
+            }
+        }
+    }
+
+    fun setUpMenuButton(isVisible: Boolean = true, listener: () -> Unit = {}) {
+        binding.btnMenu.isVisible = isVisible
+        if (isVisible) {
+            binding.btnMenu.setOnClickListener {
+                listener.invoke()
+            }
+        }
+    }
+
+    fun setUpHomeButton(isVisible: Boolean = true, listener: () -> Unit = {}) {
+        binding.btnHome.isVisible = isVisible
+        if (isVisible) {
+            binding.btnHome.setOnClickListener {
+                listener.invoke()
+            }
+        }
     }
 }

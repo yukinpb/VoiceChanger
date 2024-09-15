@@ -34,7 +34,7 @@
                 android:id="@+id/icon"
                 android:layout_width="@dimen/_40dp"
                 android:layout_height="@dimen/_40dp"
-                tools:src="@mipmap/img_voice_changer_1"
+                tools:src="@mipmap/img_sound_effect_1"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />

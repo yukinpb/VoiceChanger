@@ -18,17 +18,22 @@ object IntroduceFragmentProvider {
 object SoundEffectProvider {
     fun getSoundEffectItems(): List<VoiceChangerItem> {
         return listOf(
-            VoiceChangerItem(Constants.NONE, "None", R.mipmap.img_voice_changer_0),
-            VoiceChangerItem(Constants.RADIO, "Radio", R.mipmap.img_voice_changer_1),
-            VoiceChangerItem(Constants.CHIPMUNK, "Chipmunk", R.mipmap.img_voice_changer_2),
-            VoiceChangerItem(Constants.ROBOT, "Robot", R.mipmap.img_voice_changer_3),
-            VoiceChangerItem(Constants.CAVE, "Cave", R.mipmap.img_voice_changer_4)
+            VoiceChangerItem(Constants.VoiceEffects.NONE, "None", R.mipmap.img_sound_effect_0),
+            VoiceChangerItem(Constants.VoiceEffects.RADIO, "Radio", R.mipmap.img_sound_effect_1),
+            VoiceChangerItem(Constants.VoiceEffects.CHIPMUNK, "Chipmunk", R.mipmap.img_sound_effect_2),
+            VoiceChangerItem(Constants.VoiceEffects.ROBOT, "Robot", R.mipmap.img_sound_effect_3),
+            VoiceChangerItem(Constants.VoiceEffects.CAVE, "Cave", R.mipmap.img_sound_effect_4)
         )
     }
 }
 
 object AmbientSoundProvider {
-    fun getSoundEffectItems(): List<VoiceChangerItem> {
-        return listOf()
+    fun getAmbientSoundItems(): List<VoiceChangerItem> {
+        return listOf(
+            VoiceChangerItem(Constants.VoiceEffects.NONE, "None", R.mipmap.img_ambient_sound_0),
+            VoiceChangerItem(R.raw.clap, "Clap", R.mipmap.img_ambient_sound_1),
+            VoiceChangerItem(R.raw.waterdrops, "Water Drop", R.mipmap.img_ambient_sound_2),
+            VoiceChangerItem(R.raw.yeehaw, "Yeehaw", R.mipmap.img_ambient_sound_3),
+        )
     }
 }

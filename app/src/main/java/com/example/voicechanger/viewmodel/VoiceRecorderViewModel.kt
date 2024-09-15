@@ -36,15 +36,14 @@ class VoiceRecorderViewModel @Inject constructor(
     private var recordingFilePath: String? = null
 
     fun startRecording() {
-        val outputDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Constants.VOICE_RECORDER_DIR)
+        val outputDir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Constants.Directories.VOICE_RECORDER_DIR)
         if (!outputDir.exists()) {
             outputDir.mkdirs()
         }
         recordingFilePath = "${outputDir.absolutePath}/recording_${System.currentTimeMillis()}.mp3"
 
-        mediaRecorder.reset()
-
         mediaRecorder.apply {
+            reset()
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)

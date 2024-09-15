@@ -1,5 +1,6 @@
 package com.example.voicechanger.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
@@ -54,6 +55,7 @@ class IntroduceActivity : BaseActivityNotRequireViewModel<ActivityIntroduceBindi
                 lifecycleScope.launch {
                     appPreferences.setShouldShowIntroduce(false)
                 }
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
         }

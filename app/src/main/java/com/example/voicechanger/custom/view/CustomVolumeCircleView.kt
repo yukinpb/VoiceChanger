@@ -21,7 +21,7 @@ class CustomVolumeCircleView @JvmOverloads constructor(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
-    private val numberOfLayers = Constants.NUMBER_OF_LAYER_VOICE_CIRCLE
+    private val numberOfLayers = Constants.UI.NUMBER_OF_LAYER_VOICE_CIRCLE
 
     fun updateVolumeLevel(volume: Float) {
         currentVolumeLevel = volume.coerceIn(0f, 1f)

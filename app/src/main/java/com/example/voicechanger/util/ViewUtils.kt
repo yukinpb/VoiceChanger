@@ -12,7 +12,7 @@ object ViewUtils {
     var lastTimeClick = 0L
 }
 
-fun View.setOnSafeClickListener(minClickInterval: Long = Constants.DURATION_TIME_CLICKABLE, onClick: () -> Unit) {
+fun View.setOnSafeClickListener(minClickInterval: Long = Constants.Timing.DURATION_TIME_CLICKABLE, onClick: () -> Unit) {
     this.setOnClickListener(object : View.OnClickListener {
         override fun onClick(v: View?) {
             if (SystemClock.elapsedRealtime() - lastTimeClick < minClickInterval) {

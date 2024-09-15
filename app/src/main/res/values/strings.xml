@@ -54,5 +54,12 @@
     <string name="enter_file_name">Enter file name</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
-    <string name="save_file">Save File</string>
+    <string name="save_audio">Save Audio</string>
+    <string name="saving_audio">Saving Audio</string>
+    <string name="share">Share</string>
+    <string name="set_as_ringtone">Set as ringtone</string>
+    <string name="re_record">Re-record</string>
+    <string name="share_audio">Share Audio</string>
+    <string name="alarm">Alarm</string>
+    <string name="notification">Notification</string>
 </resources>

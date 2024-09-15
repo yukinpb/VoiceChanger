@@ -1,5 +1,6 @@
 package com.example.voicechanger.activity
 
+import com.example.voicechanger.service.FileCleanupService
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -23,12 +24,20 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         return viewModel
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        startService(Intent(this, FileCleanupService::class.java))
+
+        super.onCreate(savedInstanceState)
+    }
+
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
 
         customToolbar = CustomToolbar(this).apply {
             setToolbarTitle(context.getString(R.string.voice_changer))
-            setSettingButtonVisibility(true)
+            setUpSettingButton {
+
+            }
         }
 
         binding.toolbar.addView(customToolbar)
@@ -44,6 +53,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding.btnRecord.setOnClickListener {
             startActivity(Intent(this, VoiceRecorderActivity::class.java))
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        getVM().loadAudioFiles()
     }
 
     override fun bindingStateView() {

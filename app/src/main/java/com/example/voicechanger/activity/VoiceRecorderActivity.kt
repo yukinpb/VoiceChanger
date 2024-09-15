@@ -1,11 +1,14 @@
 package com.example.voicechanger.activity
 
 import android.Manifest
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -16,6 +19,10 @@ import com.example.voicechanger.custom.toolbar.CustomToolbar
 import com.example.voicechanger.databinding.ActivityVoiceRecorderBinding
 import com.example.voicechanger.viewmodel.VoiceRecorderViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRecorderViewModel>() {
@@ -27,15 +34,16 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
     override val layoutId: Int
         get() = R.layout.activity_voice_recorder
 
-    private val permissions = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-        arrayOf(Manifest.permission.RECORD_AUDIO)
-    } else {
-        arrayOf(
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-    }
+    private val permissions =
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(Manifest.permission.RECORD_AUDIO)
+        } else {
+            arrayOf(
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        }
 
     override fun getVM(): VoiceRecorderViewModel {
         val viewModel: VoiceRecorderViewModel by viewModels()
@@ -44,8 +52,14 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
 
     private fun checkPermissions(): Boolean {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == -1 ||
-            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == -1 ||
-            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == -1
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == -1 ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == -1
         ) {
             ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION)
         }
@@ -57,16 +71,20 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
 
-        if(!checkPermissions()) {
-            finish()
-        }
+        checkPermissions()
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                getVM().stopRecording()
+                finish()
+            }
+        })
 
         customToolbar = CustomToolbar(this).apply {
             setToolbarTitle(context.getString(R.string.recording))
-            setBackButtonVisibility(true)
-            setBackButtonClickListener {
-                getVM().stopRecording()
-                finish() }
+            setUpBackButton {
+                onBackPressedDispatcher.onBackPressed()
+            }
         }
 
         binding.toolbar.addView(customToolbar)
@@ -93,6 +111,7 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
                     isPaused = true
                     binding.imgRecorder.clearAnimation()
                 }
+
                 isPaused -> {
                     getVM().continueRecording()
                     binding.btnStartPauseRecord.setBackgroundResource(R.mipmap.ic_pause_record)
@@ -100,6 +119,7 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
                     isPaused = false
                     binding.imgRecorder.startAnimation(rotateAnimation)
                 }
+
                 else -> {
                     getVM().startRecording()
                     binding.btnStartPauseRecord.setBackgroundResource(R.mipmap.ic_pause_record)
@@ -121,7 +141,10 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
             startActivity(Intent(this, VoiceChangerActivity::class.java).apply {
                 putExtra(RECORDING_FILE_PATH, getVM().getRecordingFilePath())
             })
-            resetUI()
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(1000)
+                resetUI()
+            }
         }
     }
 

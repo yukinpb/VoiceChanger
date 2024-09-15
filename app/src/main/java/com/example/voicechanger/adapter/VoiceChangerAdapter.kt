@@ -14,7 +14,7 @@ class VoiceChangerAdapter(
     private val onItemClick: (VoiceChangerItem) -> Unit
 ) : ListAdapter<VoiceChangerItem, VoiceChangerAdapter.VoiceChangerViewHolder>(DiffCallback()) {
 
-    private var selectedItemId: Int = Constants.NONE
+    private var selectedItemId: Int = Constants.VoiceEffects.NONE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VoiceChangerViewHolder {
         val binding = ItemVoiceChangerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -27,8 +27,9 @@ class VoiceChangerAdapter(
 
     inner class VoiceChangerViewHolder(
         private val binding: ItemVoiceChangerBinding,
-        private val onItemClick: (VoiceChangerItem) -> Unit
+        private val onItemSelected: (VoiceChangerItem) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: VoiceChangerItem, isSelected: Boolean) {
             binding.title.text = item.text
             binding.icon.loadImage(item.imageRes, true)
@@ -40,7 +41,9 @@ class VoiceChangerAdapter(
                     notifyItemChanged(currentList.indexOfFirst { it.id == previousSelectedItemId })
                 }
                 notifyItemChanged(currentList.indexOfFirst { it.id == selectedItemId })
-                onItemClick(item)
+            }
+            if (isSelected) {
+                onItemSelected(item)
             }
         }
     }
