@@ -66,4 +66,12 @@
     <string name="load_more_message">Loading more items…</string>
     <string name="newest">Newest</string>
     <string name="file_name">File Name</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="click_one_more_time_to_go_home">Click one more time to go home</string>
+    <string name="click_one_more_time_to_exit">Click one more time to exit</string>
+    <string name="deleted_file_successfully">Deleted file %1$s successfully.</string>
+    <string name="rename_file_successfully">Renamed file %1$s to %2$s successfully</string>
+    <string name="confirm_delete_title">Confirm Delete</string>
+    <string name="confirm_delete_content">Are you sure you want to delete %1$s?</string>
 </resources>

@@ -72,14 +72,9 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
 
         checkPermissions()
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                getVM().stopRecording()
-                goToMainActivity()
-            }
-        })
+        setupToolbar()
 
-        setUpToolbar()
+        setupBackPress()
 
         Glide.with(this)
             .load(R.mipmap.img_recorder)
@@ -89,6 +84,15 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
         rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_infinite)
 
         binding.btnStop.isEnabled = false
+    }
+
+    private fun setupBackPress() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                getVM().stopRecording()
+                goToMainActivity()
+            }
+        })
     }
 
     override fun setOnClick() {
@@ -152,11 +156,11 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
         }
     }
 
-    private fun setUpToolbar() {
+    private fun setupToolbar() {
         customToolbar = binding.toolbar
         customToolbar?.apply {
             setToolbarTitle(getString(R.string.voice_changer))
-            setUpBackButton {
+            setupBackButton {
                 onBackPressedDispatcher.onBackPressed()
             }
         }

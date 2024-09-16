@@ -139,6 +139,8 @@ class VoiceChangerViewModel @Inject constructor(
             _progress.postValue(currentPosition / 1000)
             delay(100)
         }
+        val currentPosition = mediaPlayer.currentPosition
+        _progress.postValue(currentPosition / 1000)
     }
 
     fun seekTo(position: Int) {

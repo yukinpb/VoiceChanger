@@ -51,6 +51,15 @@
             android:name=".activity.MainActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".activity.AudioListActivity"
+            android:exported="false" />
+
+        <activity android:name=".activity.AudioSavedActivity"
+            android:exported="false" />
+
+        <activity android:name=".activity.AudioPlayActivity"
+            android:exported="false" />
 
         <service android:name=".service.FileCleanupService"
             android:foregroundServiceType="dataSync"/>

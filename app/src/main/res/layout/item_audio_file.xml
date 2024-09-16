@@ -30,7 +30,7 @@
                 android:layout_marginHorizontal="@dimen/_8dp"
                 android:textSize="@dimen/_16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@id/menu"
+                app:layout_constraintEnd_toStartOf="@id/ivMenu"
                 app:layout_constraintStart_toEndOf="@id/icon"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,11 +43,11 @@
                 android:textColor="@color/colorSecondaryText"
                 app:layout_constraintStart_toEndOf="@id/icon"
                 app:layout_constraintTop_toBottomOf="@id/nameAudio"
-                app:layout_constraintEnd_toStartOf="@id/menu"
+                app:layout_constraintEnd_toStartOf="@id/ivMenu"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
             <ImageView
-                android:id="@+id/menu"
+                android:id="@+id/ivMenu"
                 android:layout_width="@dimen/_24dp"
                 android:layout_height="@dimen/_24dp"
                 app:layout_constraintEnd_toEndOf="parent"

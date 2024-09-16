@@ -6,36 +6,35 @@ import android.widget.SeekBar
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import com.example.voicechanger.R
-import com.example.voicechanger.adapter.VoiceChangerPagerAdapter
 import com.example.voicechanger.base.activity.BaseActivity
-import com.example.voicechanger.databinding.ActivityVoiceChangerBinding
-import com.example.voicechanger.dialog.SaveFileDialog
-import com.example.voicechanger.fragment.AmbientSoundFragment
-import com.example.voicechanger.fragment.SoundEffectFragment
+import com.example.voicechanger.custom.dialog.SetAsRingtoneDialog
+import com.example.voicechanger.databinding.ActivityAudioPlayBinding
+import com.example.voicechanger.util.goToMainActivity
+import com.example.voicechanger.util.goToRecordingActivity
 import com.example.voicechanger.util.setOnSafeClickListener
 import com.example.voicechanger.util.toDurationString
 import com.example.voicechanger.viewmodel.VoiceChangerViewModel
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
-class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChangerViewModel>() {
-
-    private var isPlaying = true
-
+class AudioPlayActivity : BaseActivity<ActivityAudioPlayBinding, VoiceChangerViewModel>() {
     override val layoutId: Int
-        get() = R.layout.activity_voice_changer
+        get() = R.layout.activity_audio_play
 
     override fun getVM(): VoiceChangerViewModel {
         val viewModel: VoiceChangerViewModel by viewModels()
         return viewModel
     }
 
+    private var isPlaying = true
+    private var filePath: String? = null
+
     override fun initData() {
         super.initData()
 
-        val fileName = intent.getStringExtra(VoiceRecorderActivity.RECORDING_FILE_PATH)
-        fileName?.let {
+        filePath = intent.getStringExtra(VoiceRecorderActivity.RECORDING_FILE_PATH)
+        filePath?.let {
             getVM().setTempFileName(it)
             getVM().start()
         }
@@ -48,26 +47,7 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
 
         setupToolbar()
 
-        setupViewPager()
-
         setupProgressBar()
-    }
-
-    private fun setupViewPager() {
-        val fragments = listOf(
-                SoundEffectFragment.newInstance(),
-        AmbientSoundFragment.newInstance()
-        )
-
-        binding.viewPager.adapter = VoiceChangerPagerAdapter(this, fragments)
-
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> getString(R.string.sound_effect)
-                1 -> getString(R.string.ambient_sound)
-                else -> null
-            }
-        }.attach()
     }
 
     private fun setupBackPress() {
@@ -85,16 +65,6 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
 
         updateMaxDurationTextView()
 
-        binding.btnVolume.setOnSafeClickListener {
-            getVM().toggleVolume()
-        }
-
-        binding.btnReset.setOnSafeClickListener {
-            getVM().reset()
-            binding.progressAudio.progress = 0
-            binding.currentTime.text = getString(R.string.time_start_audio)
-        }
-
         binding.btnPauseStart.setOnSafeClickListener {
             if (isPlaying) {
                 getVM().pause()
@@ -108,6 +78,19 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
         binding.btnSpeed.setOnSafeClickListener {
             getVM().cyclePlaybackSpeed()
         }
+
+        binding.cardReRecord.setOnSafeClickListener {
+            getVM().stopMediaPlayer()
+            getVM().deleteAllTempFiles()
+            goToRecordingActivity()
+        }
+
+        binding.cardSetRingtone.setOnSafeClickListener {
+            filePath?.let { filePath ->
+                val dialog = SetAsRingtoneDialog(filePath)
+                dialog.show(supportFragmentManager, "SetAsRingtoneDialog")
+            }
+        }
     }
 
     override fun bindingStateView() {
@@ -116,14 +99,6 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
         getVM().progress.observe(this) { progress ->
             binding.progressAudio.progress = progress
             updateCurrentTimeTextView(progress)
-        }
-
-        getVM().isVolumeOn.observe(this) { isVolumeOn ->
-            if (isVolumeOn) {
-                binding.btnVolume.setImageResource(R.mipmap.ic_turn_on_volume)
-            } else {
-                binding.btnVolume.setImageResource(R.mipmap.ic_turn_off_volume)
-            }
         }
 
         getVM().isPlaying.observe(this) { isPlaying ->
@@ -143,33 +118,12 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
         customToolbar = binding.toolbar
 
         customToolbar?.apply {
-            setToolbarTitle(getString(R.string.voice_changer))
-            setupOkButton {
-                showEnterFileNameDialog()
-            }
-            setupBackButton {
-                onBackPressedDispatcher.onBackPressed()
-            }
-        }
-    }
-
-    private fun showEnterFileNameDialog() {
-        SaveFileDialog(
-            onClickOK = { fileName ->
+            setToolbarTitle(File(filePath).nameWithoutExtension)
+            setupHomeButton {
                 getVM().stopMediaPlayer()
-                getVM().setFinalFileName(fileName)
-                getVM().saveAudio()
-                getVM().deleteAllTempFiles()
-                goToAudioSaved()
+                goToMainActivity()
             }
-        ).show(supportFragmentManager, SaveFileDialog::class.java.simpleName)
-    }
-
-    private fun goToAudioSaved() {
-        val intent = Intent(this, AudioSavedActivity::class.java).apply {
-            putExtra(AudioSavedActivity.ARG_AUDIO_FILE, getVM().getAudioSaved())
         }
-        startActivity(intent)
     }
 
     private fun updateMaxDurationTextView() {
@@ -201,5 +155,4 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
             }
         })
     }
-
 }

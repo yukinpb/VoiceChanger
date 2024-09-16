@@ -25,7 +25,7 @@ class CustomToolbar @JvmOverloads constructor(
         return this
     }
 
-    fun setUpBackButton(isVisible: Boolean = true, listener: () -> Unit = {}) : CustomToolbar {
+    fun setupBackButton(isVisible: Boolean = true, listener: () -> Unit = {}) : CustomToolbar {
         binding.btnBack.isVisible = isVisible
         if (isVisible) {
             binding.btnBack.setOnClickListener {
@@ -35,7 +35,7 @@ class CustomToolbar @JvmOverloads constructor(
         return this
     }
 
-    fun setUpSettingButton(isVisible: Boolean = true, listener: () -> Unit = {}) : CustomToolbar {
+    fun setupSettingButton(isVisible: Boolean = true, listener: () -> Unit = {}) : CustomToolbar {
         binding.btnSettings.isVisible = isVisible
         if (isVisible) {
             binding.btnSettings.setOnClickListener {
@@ -45,7 +45,7 @@ class CustomToolbar @JvmOverloads constructor(
         return this
     }
 
-    fun setUpOkButton(isVisible: Boolean = true, listener: () -> Unit = {}) : CustomToolbar {
+    fun setupOkButton(isVisible: Boolean = true, listener: () -> Unit = {}) : CustomToolbar {
         binding.btnOk.isVisible = isVisible
         if (isVisible) {
             binding.btnOk.setOnClickListener {
@@ -55,7 +55,7 @@ class CustomToolbar @JvmOverloads constructor(
         return this
     }
 
-    fun setUpMenuButton(isVisible: Boolean = true, listener: () -> Unit = {}) : CustomToolbar {
+    fun setupMenuButton(isVisible: Boolean = true, listener: () -> Unit = {}) : CustomToolbar {
         binding.btnMenu.isVisible = isVisible
         if (isVisible) {
             binding.btnMenu.setOnClickListener {
@@ -65,7 +65,7 @@ class CustomToolbar @JvmOverloads constructor(
         return this
     }
 
-    fun setUpHomeButton(isVisible: Boolean = true, listener: () -> Unit = {}) : CustomToolbar {
+    fun setupHomeButton(isVisible: Boolean = true, listener: () -> Unit = {}) : CustomToolbar {
         binding.btnHome.isVisible = isVisible
         if (isVisible) {
             binding.btnHome.setOnClickListener {

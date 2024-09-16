@@ -1,28 +1,24 @@
 package com.example.voicechanger.activity
 
-import com.example.voicechanger.service.FileCleanupService
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.voicechanger.R
 import com.example.voicechanger.adapter.AudioFileAdapter
 import com.example.voicechanger.base.activity.BaseActivity
-import com.example.voicechanger.custom.toolbar.CustomToolbar
-import com.example.voicechanger.custom.view.SortAudioMenu
 import com.example.voicechanger.databinding.ActivityMainBinding
-import com.example.voicechanger.fragment.AudioListFragment
+import com.example.voicechanger.service.FileCleanupService
 import com.example.voicechanger.util.Constants
-import com.example.voicechanger.util.SortType
 import com.example.voicechanger.util.setOnSafeClickListener
+import com.example.voicechanger.util.toast
 import com.example.voicechanger.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     private lateinit var adapter: AudioFileAdapter
+    private var clickCount = 0
 
     override val layoutId: Int
         get() = R.layout.activity_main
@@ -47,11 +43,37 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override fun initView(savedInstanceState: Bundle?) {
         super.initView(savedInstanceState)
 
-        setUpToolbar()
+        setupToolbar()
 
-        adapter = AudioFileAdapter()
+        setupBackPress()
+
+        setupRecyclerView()
+    }
+
+    private fun setupRecyclerView() {
+        adapter = AudioFileAdapter(
+            isShowMenu = false,
+            onItemClicked = { audioFile ->
+                startActivity(Intent(this, AudioPlayActivity::class.java).apply {
+                    putExtra(VoiceRecorderActivity.RECORDING_FILE_PATH, audioFile.filePath)
+                })
+            }
+        )
         binding.rvMyRecord.layoutManager = LinearLayoutManager(this)
         binding.rvMyRecord.adapter = adapter
+    }
+
+    private fun setupBackPress() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                clickCount++
+                if (clickCount == 1) {
+                    this@MainActivity.toast(getString(R.string.click_one_more_time_to_exit))
+                } else if (clickCount == 2) {
+                    finish()
+                }
+            }
+        })
     }
 
     override fun setOnClick() {
@@ -62,11 +84,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         }
 
         binding.tvSeeAll.setOnSafeClickListener {
-            openAudioListFragment(Constants.Directories.VOICE_CHANGER_DIR)
+            openAudioList(Constants.Directories.VOICE_CHANGER_DIR)
         }
 
         binding.btnUploadFile.setOnSafeClickListener {
-            openAudioListFragment(Constants.Directories.VOICE_RECORDER_DIR)
+            openAudioList(Constants.Directories.VOICE_RECORDER_DIR)
         }
     }
 
@@ -76,40 +98,23 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         getVM().loadAudioFiles()
     }
 
-    private fun setUpToolbar() {
+    private fun setupToolbar() {
         customToolbar = binding.toolbar
 
         customToolbar?.apply {
             setToolbarTitle(context.getString(R.string.voice_changer))
-            setUpSettingButton {
+            setupMenuButton(false)
+            setupBackButton(false)
+            setupSettingButton {
 
             }
         }
     }
 
-    private fun openAudioListFragment(directory: String) {
-        supportFragmentManager.beginTransaction()
-            .setCustomAnimations(
-                R.anim.slide_in_right,
-                R.anim.slide_out_left,
-                R.anim.slide_in_left,
-                R.anim.slide_out_right
-            )
-            .replace(R.id.fragmentContainer, AudioListFragment.newInstance(directory))
-            .addToBackStack(null)
-            .commit()
-
-        customToolbar?.apply {
-            setToolbarTitle(
-                if (directory == Constants.Directories.VOICE_CHANGER_DIR) getString(R.string.my_record) else getString(
-                    R.string.upload_files
-                )
-            )
-            setUpSettingButton(false)
-            setUpMenuButton {
-                showSortAudioMenu()
-            }
-        }
+    private fun openAudioList(directory: String) {
+        val intent = Intent(this, AudioListActivity::class.java)
+        intent.putExtra(AudioListActivity.ARG_DIRECTORY, directory)
+        startActivity(intent)
     }
 
     override fun bindingStateView() {
@@ -124,32 +129,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 binding.rvMyRecord.visibility = View.VISIBLE
                 adapter.submitList(audioFiles)
             }
-        }
-    }
-
-    private fun showSortAudioMenu() {
-        val sortAudioMenu = SortAudioMenu(
-            onSortNewest = {
-                if (getVM().getSortType() == SortType.DATE_NEWEST) {
-                    getVM().setSortType(SortType.DATE_OLDEST)
-                } else {
-                    getVM().setSortType(SortType.DATE_NEWEST)
-                }
-            },
-            onSortFileName = {
-                if (getVM().getSortType() == SortType.NAME_ASC) {
-                    getVM().setSortType(SortType.NAME_DESC)
-                } else {
-                    getVM().setSortType(SortType.NAME_ASC)
-                }
-            }
-        )
-
-        sortAudioMenu.dialog?.window?.apply {
-            val layoutParams = attributes
-            layoutParams.y = 100
-            layoutParams.x = -50
-            attributes = layoutParams
         }
     }
 }

@@ -37,7 +37,7 @@ class MainViewModel : BaseViewModel() {
             files?.forEach { file ->
                 val size = file.getSize()
                 val duration = file.getDuration()
-                audioFilesList.add(AudioFile(file.name, duration, size))
+                audioFilesList.add(AudioFile(file.name, duration, size, file.absolutePath, file.lastModified()))
             }
         }
 
@@ -67,10 +67,11 @@ class MainViewModel : BaseViewModel() {
             when (sortType) {
                 SortType.NAME_ASC -> fileList.sortedBy { it.name }
                 SortType.NAME_DESC -> fileList.sortedByDescending { it.name }
-                SortType.DATE_NEWEST -> fileList.sortedByDescending { File(it.name).lastModified() }
-                SortType.DATE_OLDEST -> fileList.sortedBy { File(it.name).lastModified() }
+                SortType.DATE_NEWEST -> fileList.sortedByDescending { it.lastModifier }
+                SortType.DATE_OLDEST -> fileList.sortedBy { it.lastModifier }
             }
         } ?: emptyList()
+
         _audioFiles.postValue(sortedList)
     }
 }

@@ -1,7 +1,9 @@
 package com.example.voicechanger.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +13,8 @@ import com.example.voicechanger.model.AudioFile
 
 class AudioFileAdapter(
     private val isShowMenu: Boolean = false,
-    private val onMenuClick: (AudioFile) -> Unit = {}
+    private val onMenuClick: (View, AudioFile) -> Unit = { _, _ -> },
+    private val onItemClicked: (AudioFile) -> Unit = {}
 ) : ListAdapter<AudioFile, AudioFileAdapter.AudioFileViewHolder>(AudioFileDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AudioFileViewHolder {
@@ -23,10 +26,13 @@ class AudioFileAdapter(
         holder.bind(getItem(position))
     }
 
-    class AudioFileViewHolder(private val binding: ItemAudioFileBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class AudioFileViewHolder(private val binding: ItemAudioFileBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(audioFile: AudioFile) {
             binding.nameAudio.text = audioFile.name
             binding.infoAudio.text = binding.root.context.getString(R.string.audio_info, audioFile.time, audioFile.size)
+            binding.ivMenu.isVisible = isShowMenu
+            binding.ivMenu.setOnClickListener { onMenuClick(binding.ivMenu, audioFile) }
+            binding.root.setOnClickListener { onItemClicked(audioFile) }
         }
     }
 
