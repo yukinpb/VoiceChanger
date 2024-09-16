@@ -1,0 +1,95 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_8dp"
+        app:cardCornerRadius="@dimen/_8dp"
+        app:cardUseCompatPadding="true"
+        app:cardElevation="@dimen/_8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/btnSortByNewest"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingVertical="@dimen/_4dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="@dimen/_16dp"
+                android:background="@drawable/bg_sort_menu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/ivSortByNewest"
+                    android:layout_width="@dimen/_24dp"
+                    android:layout_height="@dimen/_24dp"
+                    android:layout_marginStart="@dimen/_16dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_sort_audio" />
+
+                <TextView
+                    android:id="@+id/tvSortByNewest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8dp"
+                    android:padding="@dimen/_8dp"
+                    android:text="@string/newest"
+                    android:textColor="@color/color_text_menu"
+                    android:textSize="@dimen/_16sp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/colorGray"
+                app:layout_constraintTop_toBottomOf="@id/btnSortByNewest"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/btnSortByName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                app:layout_constraintStart_toStartOf="parent"
+                android:paddingEnd="@dimen/_16dp"
+                android:paddingStart="0dp"
+                android:background="@drawable/bg_sort_menu"
+                android:paddingVertical="@dimen/_4dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/ivSortByName"
+                    android:layout_width="@dimen/_24dp"
+                    android:layout_height="@dimen/_24dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_sort_audio"
+                    android:layout_marginStart="@dimen/_16dp" />
+
+                <TextView
+                    android:id="@+id/tvSortByName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_8dp"
+                    android:layout_marginStart="@dimen/_8dp"
+                    android:text="@string/file_name"
+                    android:textColor="@color/color_text_menu"
+                    android:textSize="@dimen/_16sp" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</layout>

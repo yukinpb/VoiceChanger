@@ -62,4 +62,8 @@
     <string name="share_audio">Share Audio</string>
     <string name="alarm">Alarm</string>
     <string name="notification">Notification</string>
+    <string name="load_more">Load more</string>
+    <string name="load_more_message">Loading more items…</string>
+    <string name="newest">Newest</string>
+    <string name="file_name">File Name</string>
 </resources>

@@ -9,6 +9,7 @@ import com.example.voicechanger.databinding.ItemVoiceChangerBinding
 import com.example.voicechanger.model.VoiceChangerItem
 import com.example.voicechanger.util.Constants
 import com.example.voicechanger.util.loadImage
+import com.example.voicechanger.util.setOnSafeClickListener
 
 class VoiceChangerAdapter(
     private val onItemClick: (VoiceChangerItem) -> Unit
@@ -34,12 +35,10 @@ class VoiceChangerAdapter(
             binding.title.text = item.text
             binding.icon.loadImage(item.imageRes, true)
             binding.llVoiceChanger.isSelected = isSelected
-            binding.root.setOnClickListener {
+            binding.root.setOnSafeClickListener {
                 val previousSelectedItemId = selectedItemId
                 selectedItemId = item.id
-                if (previousSelectedItemId != null) {
-                    notifyItemChanged(currentList.indexOfFirst { it.id == previousSelectedItemId })
-                }
+                notifyItemChanged(currentList.indexOfFirst { it.id == previousSelectedItemId })
                 notifyItemChanged(currentList.indexOfFirst { it.id == selectedItemId })
             }
             if (isSelected) {

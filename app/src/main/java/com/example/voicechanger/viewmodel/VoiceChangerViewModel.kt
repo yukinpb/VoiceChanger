@@ -226,17 +226,12 @@ class VoiceChangerViewModel @Inject constructor(
         val tempFile = File(currentFileNamePlay)
         val finalFile = File(finalFileName)
 
-        mediaPlayer.stop()
-
         if (tempFile.exists()) {
             tempFile.copyTo(finalFile, overwrite = true)
-            deleteAllTempFiles()
             Log.i(TAG, "Processed audio saved to permanent storage.")
         } else {
             Log.e(TAG, "Temporary file does not exist.")
         }
-
-        mediaPlayer.reset()
     }
 
     fun deleteAllTempFiles() {
@@ -254,7 +249,7 @@ class VoiceChangerViewModel @Inject constructor(
         val file = File(finalFileName)
         val duration = file.getDuration()
         val size = file.getSize()
-        return AudioFile(file.name, duration, size, file.absolutePath)
+        return AudioFile(file.name, duration, size, file.absolutePath, file.lastModified())
     }
 
     companion object {

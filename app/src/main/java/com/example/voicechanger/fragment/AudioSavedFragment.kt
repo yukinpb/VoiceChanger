@@ -11,6 +11,7 @@ import com.example.voicechanger.base.fragment.BaseFragment
 import com.example.voicechanger.custom.dialog.SetAsRingtoneDialog
 import com.example.voicechanger.databinding.FragmentAudioSavedBinding
 import com.example.voicechanger.model.AudioFile
+import com.example.voicechanger.util.setOnSafeClickListener
 import com.example.voicechanger.viewmodel.VoiceChangerViewModel
 import java.io.File
 
@@ -39,17 +40,17 @@ class AudioSavedFragment :
     override fun setOnClick() {
         super.setOnClick()
 
-        binding.cardShare.setOnClickListener {
+        binding.cardShare.setOnSafeClickListener {
             audioSaved.filePath?.let {
                 shareFile(it)
             }
         }
 
-        binding.cardReRecord.setOnClickListener {
+        binding.cardReRecord.setOnSafeClickListener {
             requireActivity().finish()
         }
 
-        binding.cardSetRingtone.setOnClickListener {
+        binding.cardSetRingtone.setOnSafeClickListener {
             val audioFile = getVM().getAudioSaved()
             audioFile.filePath?.let { filePath ->
                 val dialog = SetAsRingtoneDialog(filePath)

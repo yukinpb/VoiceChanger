@@ -4,5 +4,6 @@ data class AudioFile(
     val name: String,
     val time: String,
     val size: String,
-    val filePath: String? = null
+    val filePath: String? = null,
+    val lastModifier: Long = 0
 )

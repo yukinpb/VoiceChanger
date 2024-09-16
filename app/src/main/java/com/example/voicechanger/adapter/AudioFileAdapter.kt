@@ -9,7 +9,10 @@ import com.example.voicechanger.R
 import com.example.voicechanger.databinding.ItemAudioFileBinding
 import com.example.voicechanger.model.AudioFile
 
-class AudioFileAdapter : ListAdapter<AudioFile, AudioFileAdapter.AudioFileViewHolder>(AudioFileDiffCallback()) {
+class AudioFileAdapter(
+    private val isShowMenu: Boolean = false,
+    private val onMenuClick: (AudioFile) -> Unit = {}
+) : ListAdapter<AudioFile, AudioFileAdapter.AudioFileViewHolder>(AudioFileDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AudioFileViewHolder {
         val binding = ItemAudioFileBinding.inflate(LayoutInflater.from(parent.context), parent, false)

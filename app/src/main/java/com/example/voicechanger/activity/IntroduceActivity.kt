@@ -10,6 +10,7 @@ import com.example.voicechanger.base.activity.BaseActivityNotRequireViewModel
 import com.example.voicechanger.base.pref.AppPreferences
 import com.example.voicechanger.databinding.ActivityIntroduceBinding
 import com.example.voicechanger.util.IntroduceFragmentProvider
+import com.example.voicechanger.util.setOnSafeClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,7 +48,7 @@ class IntroduceActivity : BaseActivityNotRequireViewModel<ActivityIntroduceBindi
             }
         })
 
-        binding.btnNext.setOnClickListener {
+        binding.btnNext.setOnSafeClickListener {
             val currentItem = binding.vpIntroduce.currentItem
             if (currentItem < fragments.size - 1) {
                 binding.vpIntroduce.currentItem = currentItem + 1

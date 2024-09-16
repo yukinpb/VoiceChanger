@@ -1,8 +1,6 @@
 package com.example.voicechanger.activity
 
 import android.Manifest
-import android.app.ActivityManager
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -15,8 +13,9 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.voicechanger.R
 import com.example.voicechanger.base.activity.BaseActivity
-import com.example.voicechanger.custom.toolbar.CustomToolbar
 import com.example.voicechanger.databinding.ActivityVoiceRecorderBinding
+import com.example.voicechanger.util.goToMainActivity
+import com.example.voicechanger.util.setOnSafeClickListener
 import com.example.voicechanger.viewmodel.VoiceRecorderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -76,18 +75,11 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 getVM().stopRecording()
-                finish()
+                goToMainActivity()
             }
         })
 
-        customToolbar = CustomToolbar(this).apply {
-            setToolbarTitle(context.getString(R.string.recording))
-            setUpBackButton {
-                onBackPressedDispatcher.onBackPressed()
-            }
-        }
-
-        binding.toolbar.addView(customToolbar)
+        setUpToolbar()
 
         Glide.with(this)
             .load(R.mipmap.img_recorder)
@@ -102,7 +94,7 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
     override fun setOnClick() {
         super.setOnClick()
 
-        binding.btnStartPauseRecord.setOnClickListener {
+        binding.btnStartPauseRecord.setOnSafeClickListener {
             when {
                 isRecording && !isPaused -> {
                     getVM().pauseRecording()
@@ -131,12 +123,12 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
             }
         }
 
-        binding.btnReset.setOnClickListener {
+        binding.btnReset.setOnSafeClickListener {
             getVM().resetRecording()
             resetUI()
         }
 
-        binding.btnStop.setOnClickListener {
+        binding.btnStop.setOnSafeClickListener {
             getVM().stopRecording()
             startActivity(Intent(this, VoiceChangerActivity::class.java).apply {
                 putExtra(RECORDING_FILE_PATH, getVM().getRecordingFilePath())
@@ -157,6 +149,16 @@ class VoiceRecorderActivity : BaseActivity<ActivityVoiceRecorderBinding, VoiceRe
 
         getVM().volumeLevel.observe(this) { volume ->
             binding.customVolumeCircleView.updateVolumeLevel(volume)
+        }
+    }
+
+    private fun setUpToolbar() {
+        customToolbar = binding.toolbar
+        customToolbar?.apply {
+            setToolbarTitle(getString(R.string.voice_changer))
+            setUpBackButton {
+                onBackPressedDispatcher.onBackPressed()
+            }
         }
     }
 

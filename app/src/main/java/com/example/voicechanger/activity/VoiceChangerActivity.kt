@@ -1,20 +1,20 @@
 package com.example.voicechanger.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.SeekBar
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import com.example.voicechanger.R
 import com.example.voicechanger.adapter.VoiceChangerPagerAdapter
 import com.example.voicechanger.base.activity.BaseActivity
-import com.example.voicechanger.custom.toolbar.CustomToolbar
 import com.example.voicechanger.databinding.ActivityVoiceChangerBinding
 import com.example.voicechanger.dialog.SaveFileDialog
 import com.example.voicechanger.fragment.AmbientSoundFragment
 import com.example.voicechanger.fragment.AudioSavedFragment
 import com.example.voicechanger.fragment.SoundEffectFragment
+import com.example.voicechanger.util.goToMainActivity
+import com.example.voicechanger.util.setOnSafeClickListener
 import com.example.voicechanger.util.toDurationString
 import com.example.voicechanger.viewmodel.VoiceChangerViewModel
 import com.google.android.material.tabs.TabLayoutMediator
@@ -24,6 +24,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChangerViewModel>() {
 
     private var isPlaying = true
+    private var isAudioSaved = false
+    private var clickCount = 0
+
     override val layoutId: Int
         get() = R.layout.activity_voice_changer
 
@@ -32,34 +35,26 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
         return viewModel
     }
 
-    override fun initView(savedInstanceState: Bundle?) {
-        super.initView(savedInstanceState)
-
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                getVM().stopMediaPlayer()
-                getVM().deleteAllTempFiles()
-                finish()
-            }
-        })
+    override fun initData() {
+        super.initData()
 
         val fileName = intent.getStringExtra(VoiceRecorderActivity.RECORDING_FILE_PATH)
         fileName?.let {
             getVM().setTempFileName(it)
             getVM().start()
         }
+    }
 
-        customToolbar = CustomToolbar(this).apply {
-            setToolbarTitle(getString(R.string.voice_changer))
-            setUpOkButton {
-                showEnterFileNameDialog()
-            }
-            setUpBackButton {
-                onBackPressedDispatcher.onBackPressed()
-            }
-        }
+    override fun initView(savedInstanceState: Bundle?) {
+        super.initView(savedInstanceState)
 
-        binding.toolbar.addView(customToolbar)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onBackPressClick()
+            }
+        })
+
+        setUpToolbar()
 
         val fragments = listOf(
             SoundEffectFragment.newInstance(),
@@ -84,17 +79,17 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
 
         updateMaxDurationTextView()
 
-        binding.btnVolume.setOnClickListener {
+        binding.btnVolume.setOnSafeClickListener {
             getVM().toggleVolume()
         }
 
-        binding.btnReset.setOnClickListener {
+        binding.btnReset.setOnSafeClickListener {
             getVM().reset()
             binding.progressAudio.progress = 0
             binding.currentTime.text = getString(R.string.time_start_audio)
         }
 
-        binding.btnPauseStart.setOnClickListener {
+        binding.btnPauseStart.setOnSafeClickListener {
             if (isPlaying) {
                 getVM().pause()
                 isPlaying = false
@@ -104,7 +99,7 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
             }
         }
 
-        binding.btnSpeed.setOnClickListener {
+        binding.btnSpeed.setOnSafeClickListener {
             getVM().cyclePlaybackSpeed()
         }
     }
@@ -138,9 +133,41 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
         }
     }
 
+    private fun setUpToolbar() {
+        customToolbar = binding.toolbar
+        customToolbar?.apply {
+            setToolbarTitle(getString(R.string.voice_changer))
+            setUpOkButton {
+                showEnterFileNameDialog()
+            }
+            setUpBackButton {
+                onBackPressedDispatcher.onBackPressed()
+            }
+        }
+    }
+
+    private fun onBackPressClick() {
+        if (!isAudioSaved) {
+            getVM().stopMediaPlayer()
+            getVM().deleteAllTempFiles()
+            finish()
+        } else {
+            clickCount++
+            clickCount++
+            if (clickCount == 1) {
+                Toast.makeText(this@VoiceChangerActivity, "Click one more time to go home", Toast.LENGTH_SHORT).show()
+            } else if (clickCount == 2) {
+                goToMainActivity()
+            }
+        }
+    }
+
     private fun showEnterFileNameDialog() {
         SaveFileDialog(
             onClickOK = { fileName ->
+                isAudioSaved = true
+                getVM().stopMediaPlayer()
+                getVM().deleteAllTempFiles()
                 getVM().setFinalFileName(fileName)
                 getVM().saveAudio()
                 goToAudioSaved()
@@ -149,8 +176,6 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
     }
 
     private fun goToAudioSaved() {
-        binding.cardFragmentContainer.isVisible = true
-
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(
                 R.anim.slide_in_right,
@@ -161,21 +186,14 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
             .replace(R.id.fragmentContainer, AudioSavedFragment())
             .commit()
 
-        binding.toolbar.removeView(customToolbar)
-
-        customToolbar = CustomToolbar(this).apply {
+        customToolbar?.apply {
             setToolbarTitle(getString(R.string.saving_audio))
             setUpBackButton(false)
             setUpOkButton(isVisible = false)
             setUpHomeButton {
-                val intent = Intent(this@VoiceChangerActivity, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                }
-                startActivity(intent)
+                goToMainActivity()
             }
         }
-
-        binding.toolbar.addView(customToolbar)
     }
 
     private fun updateMaxDurationTextView() {

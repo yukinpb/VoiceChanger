@@ -27,13 +27,7 @@ abstract class BaseActivityNotRequireViewModel<BD : ViewDataBinding> : AppCompat
         _binding = DataBindingUtil.setContentView(this, layoutId)
         _binding?.lifecycleOwner = this
 
-        initView(savedInstanceState)
-
-        setOnClick()
-
-        bindingStateView()
-
-        bindingAction()
+        onInit(savedInstanceState)
     }
 
     override fun onDestroy() {
@@ -51,21 +45,27 @@ abstract class BaseActivityNotRequireViewModel<BD : ViewDataBinding> : AppCompat
         LoadingDialog.getInstance(this)?.hidden()
     }
 
-    open fun setOnClick() {
-        //do nothing
+    private fun onInit(savedInstanceState: Bundle? = null) {
+        initData()
+
+        initView(savedInstanceState)
+
+        setOnClick()
+
+        bindingStateView()
+
+        bindingAction()
     }
 
-    open fun initView(savedInstanceState: Bundle?) {
-        //do nothing
-    }
+    open fun setOnClick() {}
 
-    open fun bindingStateView() {
-        //do nothing
-    }
+    open fun initData() {}
 
-    open fun bindingAction() {
-        //do nothing
-    }
+    open fun initView(savedInstanceState: Bundle?) {}
+
+    open fun bindingStateView() {}
+
+    open fun bindingAction() {}
 
     /**
      * Close SoftKeyboard when user click out of EditText

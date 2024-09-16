@@ -33,6 +33,8 @@ abstract class BaseFragmentNotRequireViewModel<BD : ViewDataBinding>(@LayoutRes 
     }
 
     private fun onInit(savedInstanceState: Bundle? = null) {
+        initData()
+
         initView(savedInstanceState)
 
         setOnClick()
@@ -42,21 +44,15 @@ abstract class BaseFragmentNotRequireViewModel<BD : ViewDataBinding>(@LayoutRes 
         bindingAction()
     }
 
-    open fun setOnClick() {
-        //do nothing
-    }
+    open fun setOnClick() {}
 
-    open fun initView(savedInstanceState: Bundle?) {
-        //do nothing
-    }
+    open fun initData() {}
 
-    open fun bindingStateView() {
-        //do nothing
-    }
+    open fun initView(savedInstanceState: Bundle?) {}
 
-    open fun bindingAction() {
-        //do nothing
-    }
+    open fun bindingStateView() {}
+
+    open fun bindingAction() {}
 
     override fun onDestroyView() {
         _binding?.unbind()

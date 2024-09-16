@@ -92,23 +92,7 @@ class SetAsRingtoneDialog(
         )
         val newUri = context.contentResolver.insert(uri, values)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (Settings.System.canWrite(context)) {
-                try {
-                    RingtoneManager.setActualDefaultRingtoneUri(
-                        context,
-                        getRingtoneType(option),
-                        newUri
-                    )
-                    context.toast("Set as ${option.lowercase(Locale.ROOT)} successfully")
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                    context.toast("Device does not support this feature")
-                }
-            } else {
-                context.toast("Device does not support this feature")
-            }
-        } else {
+        if (Settings.System.canWrite(context)) {
             try {
                 RingtoneManager.setActualDefaultRingtoneUri(
                     context,
@@ -120,6 +104,8 @@ class SetAsRingtoneDialog(
                 e.printStackTrace()
                 context.toast("Device does not support this feature")
             }
+        } else {
+            context.toast("Device does not support this feature")
         }
     }
 

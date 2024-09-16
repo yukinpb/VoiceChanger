@@ -6,4 +6,6 @@
     <color name="colorSecondaryText">#9C9E9F</color>
     <color name="colorSecondary">#ADD8E6</color>
     <color name="colorBackground">#EFEFF4</color>
+    <color name="colorPrimaryTransparent">#1A0E89F5</color>
+    <color name="colorGray">#B3808080</color>
 </resources>
