@@ -4,9 +4,12 @@ import android.app.Application
 import android.os.Bundle
 import android.os.Environment
 import android.speech.tts.TextToSpeech
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.voicechanger.base.pref.AppPreferences
 import com.example.voicechanger.base.viewmodel.BaseViewModel
+import com.example.voicechanger.model.Language
+import com.example.voicechanger.pref.AppPreferences
 import com.example.voicechanger.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,17 +26,23 @@ class TextToAudioViewModel @Inject constructor(
     private var tts: TextToSpeech = TextToSpeech(application, this)
     private var currentText: String = ""
 
+    private val _language = MutableLiveData<Language?>()
+    val language: LiveData<Language?> get() = _language
+
     init {
         viewModelScope.launch {
-            appPreferences.getLanguage().collect { locale ->
-                locale?.let { setLanguage(it) }
+            appPreferences.getLanguage().collect { language ->
+                language?.let {
+                    setLanguage(it)
+                    _language.postValue(it)
+                }
             }
         }
     }
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            tts.language = Locale.US
+            tts.language = _language.value?.locale
         }
     }
 
@@ -64,18 +73,18 @@ class TextToAudioViewModel @Inject constructor(
         tts = TextToSpeech(application, this)
     }
 
-    fun setLanguage(locale: Locale) {
-        tts.language = locale
+    fun setLanguage(language: Language) {
+        tts.language = language.locale
         viewModelScope.launch {
-            updateLanguage(locale)
+            updateLanguage(language)
         }
         if (currentText.isNotEmpty()) {
             speakText(currentText)
         }
     }
 
-    private suspend fun updateLanguage(locale: Locale) {
-        appPreferences.setLanguage(locale)
+    private suspend fun updateLanguage(language: Language) {
+        appPreferences.setLanguage(language)
     }
 
     override fun onCleared() {

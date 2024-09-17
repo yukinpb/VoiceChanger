@@ -7,7 +7,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.voicechanger.R
 import com.example.voicechanger.adapter.IntroducePagerAdapter
 import com.example.voicechanger.base.activity.BaseActivityNotRequireViewModel
-import com.example.voicechanger.base.pref.AppPreferences
+import com.example.voicechanger.pref.AppPreferences
 import com.example.voicechanger.databinding.ActivityIntroduceBinding
 import com.example.voicechanger.util.IntroduceFragmentProvider
 import com.example.voicechanger.util.setOnSafeClickListener

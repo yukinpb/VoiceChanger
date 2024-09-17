@@ -5,15 +5,15 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_8dp"
-        android:elevation="@dimen/_8dp"
         app:cardCornerRadius="@dimen/_16dp"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        android:elevation="@dimen/_8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/llLanguage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_item_voice_changer">
 
             <ImageView
                 android:id="@+id/ivFlag"

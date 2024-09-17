@@ -1,4 +1,4 @@
-package com.example.voicechanger.dialog
+package com.example.voicechanger.custom.dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -45,8 +45,8 @@ class SaveFileDialog(
         super.onResume()
 
         val layoutParams = dialog?.window?.attributes
-        layoutParams?.width = ViewGroup.LayoutParams.MATCH_PARENT
-        layoutParams?.horizontalMargin = 0.1f
+        layoutParams?.width = (resources.displayMetrics.widthPixels * 0.9).toInt()
+        layoutParams?.height = ViewGroup.LayoutParams.WRAP_CONTENT
         dialog?.window?.attributes = layoutParams
     }
 

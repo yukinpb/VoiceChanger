@@ -37,6 +37,7 @@ class AudioPlayActivity : BaseActivity<ActivityAudioPlayBinding, VoiceChangerVie
         filePath?.let {
             getVM().setTempFileName(it)
             getVM().start()
+            getVM().getMaxDuration()
         }
     }
 

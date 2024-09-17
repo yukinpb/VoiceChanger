@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.voicechanger.R
 import com.example.voicechanger.adapter.AudioFileAdapter
 import com.example.voicechanger.base.activity.BaseActivity
-import com.example.voicechanger.base.pref.AppPreferences
+import com.example.voicechanger.custom.dialog.LanguageDialog
+import com.example.voicechanger.pref.AppPreferences
 import com.example.voicechanger.databinding.ActivityMainBinding
-import com.example.voicechanger.dialog.LanguageDialogFragment
 import com.example.voicechanger.service.FileCleanupService
 import com.example.voicechanger.util.Constants
 import com.example.voicechanger.util.setOnSafeClickListener
@@ -100,6 +100,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding.btnUploadFile.setOnSafeClickListener {
             openAudioList(Constants.Directories.VOICE_RECORDER_DIR)
         }
+
+        binding.btnTextToAudio.setOnSafeClickListener {
+            startActivity(Intent(this, TextToAudioActivity::class.java))
+        }
     }
 
     override fun onResume() {
@@ -116,9 +120,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             setupMenuButton(false)
             setupBackButton(false)
             setupSettingButton {
-                LanguageDialogFragment { language ->
+                LanguageDialog { language ->
                    lifecycleScope.launch {
-                        appPreferences.setLanguage(language.locale)
+                        appPreferences.setLanguage(language)
                    }
                 }.show(supportFragmentManager, "LanguageDialogFragment")
             }

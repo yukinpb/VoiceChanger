@@ -15,7 +15,6 @@
             android:id="@+id/llVoiceChanger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:padding="@dimen/_16dp"
             android:background="@drawable/bg_item_voice_changer">
 

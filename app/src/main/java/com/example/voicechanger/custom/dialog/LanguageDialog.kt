@@ -1,4 +1,4 @@
-package com.example.voicechanger.dialog
+package com.example.voicechanger.custom.dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,18 +8,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.voicechanger.R
 import com.example.voicechanger.adapter.LanguageAdapter
 import com.example.voicechanger.databinding.DialogLanguageBinding
 import com.example.voicechanger.model.Language
-import java.util.Locale
+import com.example.voicechanger.pref.AppPreferences
+import com.example.voicechanger.util.LanguageProvider
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LanguageDialogFragment(
+@AndroidEntryPoint
+class LanguageDialog(
     private val onLanguageSelected: (Language) -> Unit
 ) : DialogFragment() {
 
     private var binding: DialogLanguageBinding? = null
+
+    @Inject
+    lateinit var appPreferences: AppPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,15 +44,15 @@ class LanguageDialogFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val languages = listOf(
-            Language(R.mipmap.ic_vietnam, getString(R.string.vietnamese), Locale("vi", "VN")),
-            Language(R.mipmap.ic_us, getString(R.string.english), Locale.US)
-        )
+        val languages = LanguageProvider.getLanguages()
 
-        binding?.rvLanguages?.layoutManager = LinearLayoutManager(context)
-        binding?.rvLanguages?.adapter = LanguageAdapter(languages) { language ->
-            onLanguageSelected(language)
-            dismiss()
+        lifecycleScope.launch {
+            val selectedLanguage = appPreferences.getLanguage().first()
+            binding?.rvLanguages?.layoutManager = LinearLayoutManager(context)
+            binding?.rvLanguages?.adapter = LanguageAdapter(languages, selectedLanguage) { language ->
+                onLanguageSelected(language)
+                dismiss()
+            }
         }
     }
 
@@ -51,8 +60,8 @@ class LanguageDialogFragment(
         super.onResume()
 
         val layoutParams = dialog?.window?.attributes
-        layoutParams?.width = ViewGroup.LayoutParams.MATCH_PARENT
-        layoutParams?.horizontalMargin = 0.1f
+        layoutParams?.width = (resources.displayMetrics.widthPixels * 0.9).toInt()
+        layoutParams?.height = ViewGroup.LayoutParams.WRAP_CONTENT
         dialog?.window?.attributes = layoutParams
     }
 

@@ -2,7 +2,9 @@ package com.example.voicechanger.util
 
 import com.example.voicechanger.R
 import com.example.voicechanger.fragment.IntroduceFragment
+import com.example.voicechanger.model.Language
 import com.example.voicechanger.model.VoiceChangerItem
+import java.util.Locale
 
 object IntroduceFragmentProvider {
     fun getFragments(): List<IntroduceFragment> {
@@ -34,6 +36,18 @@ object AmbientSoundProvider {
             VoiceChangerItem(R.raw.clap, "Clap", R.mipmap.img_ambient_sound_1),
             VoiceChangerItem(R.raw.waterdrops, "Water Drop", R.mipmap.img_ambient_sound_2),
             VoiceChangerItem(R.raw.yeehaw, "Yeehaw", R.mipmap.img_ambient_sound_3),
+        )
+    }
+}
+
+object LanguageProvider {
+    fun getLanguages(): List<Language> {
+        return listOf(
+            Language(R.mipmap.ic_vietnam, "Vietnamese", Locale("vi", "VN")),
+            Language(R.mipmap.ic_us, "English", Locale.US),
+            Language(R.mipmap.ic_france, "French", Locale.FRANCE),
+            Language(R.mipmap.ic_germany, "German", Locale.GERMANY),
+            Language(R.mipmap.ic_japan, "Japanese", Locale.JAPAN)
         )
     }
 }

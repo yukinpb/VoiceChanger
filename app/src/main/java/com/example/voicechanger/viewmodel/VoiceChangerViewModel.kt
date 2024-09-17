@@ -47,6 +47,9 @@ class VoiceChangerViewModel @Inject constructor(
     private val _isPlaying = MutableLiveData(true)
     val isPlaying: LiveData<Boolean> = _isPlaying
 
+    private val _maxDuration = MutableLiveData(0)
+    val maxDuration: LiveData<Int> = _maxDuration
+
     private val playbackSpeeds = listOf(0.5f, 1.0f, 1.5f, 2.0f)
     private var currentFileNamePlay = tempFileName
 
@@ -85,7 +88,9 @@ class VoiceChangerViewModel @Inject constructor(
     }
 
     fun getMaxDuration(): Int {
-        return mediaPlayer.duration / 1000
+        val duration = mediaPlayer.duration / 1000
+        _maxDuration.postValue(duration)
+        return duration
     }
 
     fun pause() {
@@ -158,6 +163,7 @@ class VoiceChangerViewModel @Inject constructor(
                 Log.i("GetInfo", "Command execution completed successfully.")
                 hideLoading()
                 start()
+                getMaxDuration()
             }
 
             Config.RETURN_CODE_CANCEL -> {
@@ -221,7 +227,6 @@ class VoiceChangerViewModel @Inject constructor(
 
     fun stopMediaPlayer() {
         mediaPlayer.stop()
-        mediaPlayer.reset()
     }
 
     fun saveAudio() {

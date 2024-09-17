@@ -2,12 +2,9 @@ package com.example.voicechanger.custom.dialog
 
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.RingtoneManager
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
@@ -113,8 +110,8 @@ class SetAsRingtoneDialog(
         super.onResume()
 
         val layoutParams = dialog?.window?.attributes
-        layoutParams?.width = ViewGroup.LayoutParams.MATCH_PARENT
-        layoutParams?.horizontalMargin = 0.1f
+        layoutParams?.width = (resources.displayMetrics.widthPixels * 0.9).toInt()
+        layoutParams?.height = ViewGroup.LayoutParams.WRAP_CONTENT
         dialog?.window?.attributes = layoutParams
     }
 

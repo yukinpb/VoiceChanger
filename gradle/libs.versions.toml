@@ -25,6 +25,7 @@ roomCompiler = "2.6.1"
 roomVersion = "2.6.0"
 glide = "4.16.0"
 dataStore = "1.0.0"
+annotations = "15.0"
 
 
 [libraries]
@@ -58,6 +59,7 @@ okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glideCompiler = { module = "com.github.bumptech.glide:ksp", version.ref = "glide" }
 dataStore = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore" }
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

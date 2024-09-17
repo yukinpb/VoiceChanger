@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.voicechanger.R
 import com.example.voicechanger.base.activity.BaseActivity
+import com.example.voicechanger.custom.dialog.LanguageDialog
 import com.example.voicechanger.databinding.ActivityTextToAudioBinding
-import com.example.voicechanger.dialog.LanguageDialogFragment
 import com.example.voicechanger.viewmodel.TextToAudioViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class TextToAudioActivity : BaseActivity<ActivityTextToAudioBinding, TextToAudioViewModel>() {
@@ -67,17 +69,26 @@ class TextToAudioActivity : BaseActivity<ActivityTextToAudioBinding, TextToAudio
             }
 
             ivCountry.setOnClickListener {
-                LanguageDialogFragment { language ->
-                    getVM().setLanguage(language.locale)
+                LanguageDialog{ language ->
+                    getVM().setLanguage(language)
                     ivCountry.setBackgroundResource(language.imageId)
                 }.show(supportFragmentManager, "LanguageDialogFragment")
             }
         }
     }
 
+    override fun bindingStateView() {
+        super.bindingStateView()
+
+        getVM().language.observe(this) { language ->
+            language?.let {
+                binding.ivCountry.setBackgroundResource(it.imageId)
+            }
+        }
+    }
+
     override fun onPause() {
         super.onPause()
-        binding.etTextInput.text.clear()
         getVM().resetTextToSpeech()
     }
 }

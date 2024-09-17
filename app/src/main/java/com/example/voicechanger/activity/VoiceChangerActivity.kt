@@ -9,7 +9,7 @@ import com.example.voicechanger.R
 import com.example.voicechanger.adapter.VoiceChangerPagerAdapter
 import com.example.voicechanger.base.activity.BaseActivity
 import com.example.voicechanger.databinding.ActivityVoiceChangerBinding
-import com.example.voicechanger.dialog.SaveFileDialog
+import com.example.voicechanger.custom.dialog.SaveFileDialog
 import com.example.voicechanger.fragment.AmbientSoundFragment
 import com.example.voicechanger.fragment.SoundEffectFragment
 import com.example.voicechanger.util.setOnSafeClickListener
@@ -83,8 +83,6 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
     override fun setOnClick() {
         super.setOnClick()
 
-        updateMaxDurationTextView()
-
         binding.btnVolume.setOnSafeClickListener {
             getVM().toggleVolume()
         }
@@ -137,6 +135,11 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
         getVM().playbackSpeed.observe(this) { speed ->
             binding.btnSpeed.text = getString(R.string.x, speed)
         }
+
+        getVM().maxDuration.observe(this) { maxDuration ->
+            binding.maxTime.text = maxDuration.toDurationString()
+            binding.progressAudio.max = maxDuration
+        }
     }
 
     private fun setupToolbar() {
@@ -170,12 +173,6 @@ class VoiceChangerActivity : BaseActivity<ActivityVoiceChangerBinding, VoiceChan
             putExtra(AudioSavedActivity.ARG_AUDIO_FILE, getVM().getAudioSaved())
         }
         startActivity(intent)
-    }
-
-    private fun updateMaxDurationTextView() {
-        val maxDuration = getVM().getMaxDuration()
-        binding.maxTime.text = maxDuration.toDurationString()
-        binding.progressAudio.max = maxDuration
     }
 
     private fun updateCurrentTimeTextView(progress: Int) {

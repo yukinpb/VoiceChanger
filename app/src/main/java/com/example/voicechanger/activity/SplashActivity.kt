@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.example.voicechanger.R
 import com.example.voicechanger.base.activity.BaseActivityNotRequireViewModel
-import com.example.voicechanger.base.pref.AppPreferences
+import com.example.voicechanger.pref.AppPreferences
 import com.example.voicechanger.databinding.ActivitySplashBinding
 import com.example.voicechanger.util.loadImage
 import dagger.hilt.android.AndroidEntryPoint
