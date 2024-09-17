@@ -5,20 +5,30 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.voicechanger.R
 import com.example.voicechanger.adapter.AudioFileAdapter
 import com.example.voicechanger.base.activity.BaseActivity
+import com.example.voicechanger.base.pref.AppPreferences
 import com.example.voicechanger.databinding.ActivityMainBinding
+import com.example.voicechanger.dialog.LanguageDialogFragment
 import com.example.voicechanger.service.FileCleanupService
 import com.example.voicechanger.util.Constants
 import com.example.voicechanger.util.setOnSafeClickListener
 import com.example.voicechanger.util.toast
 import com.example.voicechanger.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     private lateinit var adapter: AudioFileAdapter
     private var clickCount = 0
+
+    @Inject
+    lateinit var appPreferences: AppPreferences
 
     override val layoutId: Int
         get() = R.layout.activity_main
@@ -106,7 +116,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             setupMenuButton(false)
             setupBackButton(false)
             setupSettingButton {
-
+                LanguageDialogFragment { language ->
+                   lifecycleScope.launch {
+                        appPreferences.setLanguage(language.locale)
+                   }
+                }.show(supportFragmentManager, "LanguageDialogFragment")
             }
         }
     }

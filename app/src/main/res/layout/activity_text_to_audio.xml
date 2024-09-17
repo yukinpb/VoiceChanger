@@ -1,0 +1,102 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/CustomAppBarLayout">
+
+            <com.example.voicechanger.custom.toolbar.CustomToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <EditText
+                android:id="@+id/etTextInput"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_400dp"
+                android:autofillHints=""
+                android:background="@drawable/bg_edit_text"
+                android:gravity="top|start"
+                android:hint="@string/enter_text_here"
+                android:inputType="textMultiLine"
+                android:paddingTop="@dimen/_16dp"
+                android:paddingBottom="@dimen/_24dp"
+                android:paddingHorizontal="@dimen/_16dp"
+                android:layout_marginTop="@dimen/_16dp"
+                android:scrollbars="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ivCountry" />
+
+            <View
+                android:layout_width="@dimen/_24dp"
+                android:layout_height="@dimen/_24dp"
+                android:background="@color/white"
+                app:layout_constraintStart_toStartOf="@id/btnPlay"
+                app:layout_constraintEnd_toEndOf="@id/btnPlay"
+                app:layout_constraintTop_toTopOf="@id/btnPlay"
+                app:layout_constraintBottom_toBottomOf="@id/btnPlay"/>
+
+            <ImageButton
+                android:id="@+id/ivCountry"
+                android:layout_width="@dimen/_30dp"
+                android:layout_height="@dimen/_30dp"
+                android:contentDescription="@string/country"
+                android:background="@mipmap/ic_us"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageButton
+                android:id="@+id/btnPlay"
+                android:layout_width="@dimen/_50dp"
+                android:layout_height="@dimen/_50dp"
+                android:layout_marginTop="-26dp"
+                android:contentDescription="@string/play"
+                android:background="@mipmap/ic_continue_record"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etTextInput" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnNext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16dp"
+                app:cardCornerRadius="@dimen/_10dp"
+                app:cardUseCompatPadding="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnPlay">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_button_blue_gradient"
+                    android:padding="@dimen/_8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/next"
+                        android:textSize="@dimen/_18sp"
+                        android:textColor="@color/white" />
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+</layout>

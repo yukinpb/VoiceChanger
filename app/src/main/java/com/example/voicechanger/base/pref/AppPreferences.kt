@@ -5,6 +5,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,10 +20,12 @@ class AppPreferences @Inject constructor(
         val PREF_PARAM_SHOW_INTRODUCE = booleanPreferencesKey("PREF_PARAM_SHOW_INTRODUCE")
     }
 
-    fun getLanguage(): Flow<String?> = getValue(PreferencesKeys.PREF_PARAM_LANGUAGE)
+    fun getLanguage(): Flow<Locale?> = getValue(PreferencesKeys.PREF_PARAM_LANGUAGE).map { languageCode ->
+        languageCode?.let { Locale.forLanguageTag(it) }
+    }
 
-    suspend fun setLanguage(language: String) {
-        putValue(PreferencesKeys.PREF_PARAM_LANGUAGE, language)
+    suspend fun setLanguage(locale: Locale) {
+        putValue(PreferencesKeys.PREF_PARAM_LANGUAGE, locale.toLanguageTag())
     }
 
     fun shouldShowIntroduce(): Flow<Boolean?> = getValue(PreferencesKeys.PREF_PARAM_SHOW_INTRODUCE)

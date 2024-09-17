@@ -9,14 +9,14 @@
         app:cardCornerRadius="@dimen/_16dp"
         app:cardUseCompatPadding="true"
         android:elevation="@dimen/_8dp"
-        android:layout_margin="8dp">
+        android:layout_margin="@dimen/_8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/llVoiceChanger"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp"
+            android:padding="@dimen/_16dp"
             android:background="@drawable/bg_item_voice_changer">
 
             <TextView
