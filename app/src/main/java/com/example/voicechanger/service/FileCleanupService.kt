@@ -20,12 +20,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class FileCleanupService : Service() {
 
-    @Inject
-    lateinit var mediaPlayer: MediaPlayer
-
-    @Inject
-    lateinit var mediaRecorder: MediaRecorder
-
     override fun onCreate() {
         super.onCreate()
         startForegroundService()
@@ -45,9 +39,6 @@ class FileCleanupService : Service() {
                 }
             }
         }
-
-        mediaRecorder.release()
-        mediaPlayer.release()
 
         stopSelf()
     }

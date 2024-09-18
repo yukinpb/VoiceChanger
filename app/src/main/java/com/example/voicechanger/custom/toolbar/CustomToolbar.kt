@@ -3,7 +3,7 @@ package com.example.voicechanger.custom.toolbar
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import com.example.voicechanger.databinding.CustomToolbarBinding
 
@@ -11,7 +11,7 @@ class CustomToolbar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : ConstraintLayout(context, attrs, defStyleAttr) {
+) : Toolbar(context, attrs, defStyleAttr) {
 
     private val binding: CustomToolbarBinding
 

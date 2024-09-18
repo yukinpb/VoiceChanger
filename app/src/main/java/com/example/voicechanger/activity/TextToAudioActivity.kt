@@ -44,7 +44,6 @@ class TextToAudioActivity : BaseActivity<ActivityTextToAudioBinding, TextToAudio
     private fun setupOnBackPress() {
         onBackPressedDispatcher.addCallback(this) {
             binding.etTextInput.text.clear()
-            getVM().resetTextToSpeech()
             finish()
         }
     }
@@ -85,10 +84,5 @@ class TextToAudioActivity : BaseActivity<ActivityTextToAudioBinding, TextToAudio
                 binding.ivCountry.setBackgroundResource(it.imageId)
             }
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        getVM().resetTextToSpeech()
     }
 }

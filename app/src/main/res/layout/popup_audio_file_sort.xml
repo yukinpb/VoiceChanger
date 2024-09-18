@@ -23,7 +23,7 @@
                 android:paddingVertical="@dimen/_4dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="@dimen/_16dp"
-                android:background="@color/bg_sort_menu"
+                android:background="@drawable/bg_sort_menu"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -67,7 +67,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:paddingEnd="@dimen/_16dp"
                 android:paddingStart="0dp"
-                android:background="@color/bg_sort_menu"
+                android:background="@drawable/bg_sort_menu"
                 android:paddingVertical="@dimen/_4dp"
                 tools:ignore="UseCompoundDrawables">
 

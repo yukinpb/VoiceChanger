@@ -20,9 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VoiceRecorderViewModel @Inject constructor(
-    private val mediaRecorder: MediaRecorder,
     @ApplicationContext private val context: Context
 ) : BaseViewModel() {
+
+    private val mediaRecorder: MediaRecorder = MediaRecorder()
 
     private val _timerText = MutableLiveData<String>()
     val timerText: LiveData<String> = _timerText

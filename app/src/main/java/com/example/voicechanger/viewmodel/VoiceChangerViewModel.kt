@@ -1,5 +1,6 @@
 package com.example.voicechanger.viewmodel
 
+import android.content.Context
 import android.media.MediaPlayer
 import android.os.Environment
 import android.util.Log
@@ -13,7 +14,9 @@ import com.example.voicechanger.model.AudioFile
 import com.example.voicechanger.util.Constants
 import com.example.voicechanger.util.getDuration
 import com.example.voicechanger.util.getSize
+import com.example.voicechanger.util.toast
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
@@ -22,8 +25,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VoiceChangerViewModel @Inject constructor(
-    private val mediaPlayer: MediaPlayer
+    @ApplicationContext private val context: Context
 ) : BaseViewModel() {
+
+    private var mediaPlayer: MediaPlayer = MediaPlayer()
 
     private var tempFileName = ""
     private var tempOutputFileName = ""
@@ -71,9 +76,10 @@ class VoiceChangerViewModel @Inject constructor(
     }
 
     fun start() {
+        mediaPlayer = MediaPlayer()
+
         mediaPlayer.apply {
             try {
-                reset()
                 setDataSource(currentFileNamePlay)
                 prepare()
                 isLooping = true
@@ -168,6 +174,7 @@ class VoiceChangerViewModel @Inject constructor(
 
             Config.RETURN_CODE_CANCEL -> {
                 Log.i("GetInfo", "Command execution cancelled by user.")
+                hideLoading()
             }
 
             else -> {
@@ -179,6 +186,8 @@ class VoiceChangerViewModel @Inject constructor(
                         output
                     )
                 )
+                context.toast("Command execution failed.")
+                hideLoading()
             }
         }
     }
@@ -226,7 +235,10 @@ class VoiceChangerViewModel @Inject constructor(
     }
 
     fun stopMediaPlayer() {
-        mediaPlayer.stop()
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+        }
+        mediaPlayer.reset()
     }
 
     fun saveAudio() {
@@ -234,8 +246,15 @@ class VoiceChangerViewModel @Inject constructor(
         val finalFile = File(finalFileName)
 
         if (tempFile.exists()) {
-            tempFile.copyTo(finalFile, overwrite = true)
-            Log.i(TAG, "Processed audio saved to permanent storage.")
+            if (finalFile.exists()) {
+                finalFile.delete()
+            }
+            try {
+                tempFile.copyTo(finalFile, overwrite = true)
+                Log.i(TAG, "Processed audio saved to permanent storage.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to save audio: ${e.message}")
+            }
         } else {
             Log.e(TAG, "Temporary file does not exist.")
         }

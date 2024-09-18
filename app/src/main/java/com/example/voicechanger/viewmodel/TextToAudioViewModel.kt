@@ -67,12 +67,6 @@ class TextToAudioViewModel @Inject constructor(
         return filePath
     }
 
-    fun resetTextToSpeech() {
-        tts.stop()
-        tts.shutdown()
-        tts = TextToSpeech(application, this)
-    }
-
     fun setLanguage(language: Language) {
         tts.language = language.locale
         viewModelScope.launch {
